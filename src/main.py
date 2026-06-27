@@ -3,6 +3,7 @@ import sys
 import traceback
 
 from content_generator import generate_content
+from narration import generate_narration
 from video_creator import create_video
 from youtube_uploader import upload_video
 
@@ -18,14 +19,17 @@ def main():
         print(f"✅ Tema: {content['type']} — {content['subject']}")
         print(f"   Título: {content['youtube_title']}\n")
 
-        print("🎬 Criando YouTube Short...")
+        print("🎙️  Gerando narração feminina...")
+        audio_path = generate_narration(content["narration_script"], "/tmp/ritmos_narration.mp3")
+
+        print("\n🎬 Criando YouTube Short com narração...")
         logo = LOGO_PATH if os.path.exists(LOGO_PATH) else None
-        video_path = create_video(content, "/tmp/ritmos_video.mp4", logo_path=logo)
+        video_path = create_video(content, "/tmp/ritmos_video.mp4", logo_path=logo, audio_path=audio_path)
 
         print("\n📤 Publicando no YouTube...")
         result = upload_video(video_path, content)
 
-        print(f"\n🎉 Short publicado!")
+        print(f"\n🎉 Short publicado com narração!")
         print(f"   Título: {content['youtube_title']}")
         print(f"   URL   : {result['url']}")
 

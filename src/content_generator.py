@@ -65,26 +65,22 @@ Responda APENAS com JSON válido, sem markdown:
   "subject": "assunto específico escolhido (ex: 'Roberto Carlos', 'Bossa Nova', 'Garota de Ipanema')",
   "slides": [
     {{
-      "text": "Texto do slide 1 — o HOOK que prende a atenção (máx 80 chars)",
-      "duration": 9
+      "text": "Texto do slide 1 — o HOOK que prende a atenção (máx 80 chars)"
     }},
     {{
-      "text": "Texto do slide 2 — primeira revelação/fato (máx 100 chars)",
-      "duration": 9
+      "text": "Texto do slide 2 — primeira revelação/fato (máx 100 chars)"
     }},
     {{
-      "text": "Texto do slide 3 — aprofundamento/contexto (máx 100 chars)",
-      "duration": 9
+      "text": "Texto do slide 3 — aprofundamento/contexto (máx 100 chars)"
     }},
     {{
-      "text": "Texto do slide 4 — clímax ou curiosidade surpreendente (máx 100 chars)",
-      "duration": 9
+      "text": "Texto do slide 4 — clímax ou curiosidade surpreendente (máx 100 chars)"
     }},
     {{
-      "text": "🎵 Ritmos do Brasil\\nInscreva-se para mais conteúdo!",
-      "duration": 9
+      "text": "🎵 Ritmos do Brasil\\nInscreva-se para mais conteúdo!"
     }}
   ],
+  "narration_script": "Script COMPLETO para narração em voz feminina, em português brasileiro natural e empolgante. Deve cobrir todos os slides do vídeo. Entre 80 e 110 palavras (≈45 segundos falados). Tom animado, apaixonado por música brasileira. NÃO inclua indicações de cena ou colchetes — apenas o texto que será narrado.",
   "youtube_title": "Título YouTube otimizado para Shorts (máx 80 chars, inclui emoji)",
   "youtube_description": "Descrição completa para YouTube (2 parágrafos + hashtags). Mencionar @ritmos-do-brasil",
   "tags": ["musica brasileira", "shorts", "...mais 8 tags relevantes..."]

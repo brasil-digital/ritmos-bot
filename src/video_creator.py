@@ -150,13 +150,36 @@ def _make_slide(slide_text, slide_num, total_slides, content_type, subject, logo
     return img
 
 
-def create_video(content, output_path="/tmp/ritmos_video.mp4", logo_path=None):
+def _audio_duration(audio_path: str) -> float:
+    """Get audio duration in seconds using ffprobe."""
+    result = subprocess.run([
+        "ffprobe", "-v", "quiet", "-print_format", "json",
+        "-show_streams", audio_path
+    ], capture_output=True, text=True)
+    import json
+    data = json.loads(result.stdout)
+    for stream in data.get("streams", []):
+        if stream.get("codec_type") == "audio":
+            return float(stream.get("duration", 45))
+    return 45.0
+
+
+def create_video(content, output_path="/tmp/ritmos_video.mp4", logo_path=None, audio_path=None):
     slides = content["slides"]
     content_type = content.get("type", "default")
     subject = content.get("subject", "")
 
     print(f"🎬 Criando Short: {content.get('youtube_title', 'Ritmos do Brasil')}")
     print(f"   Tipo: {content_type} | Assunto: {subject} | {len(slides)} slides")
+
+    # Calcular duração de cada slide baseado no áudio
+    if audio_path and os.path.exists(audio_path):
+        total_duration = _audio_duration(audio_path)
+        print(f"   Duração do áudio: {total_duration:.1f}s")
+    else:
+        total_duration = len(slides) * 9.0
+
+    slide_dur = total_duration / len(slides)
 
     with tempfile.TemporaryDirectory() as tmp:
         imgs = []
@@ -167,27 +190,47 @@ def create_video(content, output_path="/tmp/ritmos_video.mp4", logo_path=None):
             )
             path = os.path.join(tmp, f"slide_{i:02d}.png")
             img.save(path)
-            imgs.append((path, slide.get("duration", 9)))
+            imgs.append((path, slide_dur))
             print(f"   Slide {i+1}/{len(slides)}")
 
         concat_file = os.path.join(tmp, "slides.txt")
         with open(concat_file, "w") as f:
             for path, dur in imgs:
                 f.write(f"file '{path}'\n")
-                f.write(f"duration {dur}\n")
+                f.write(f"duration {dur:.3f}\n")
             f.write(f"file '{imgs[-1][0]}'\n")
 
+        slides_mp4 = os.path.join(tmp, "slides_silent.mp4")
         result = subprocess.run([
             "ffmpeg", "-y",
             "-f", "concat", "-safe", "0", "-i", concat_file,
             "-vf", "fps=30,scale=1080:1920:flags=lanczos,format=yuv420p",
             "-c:v", "libx264", "-preset", "fast", "-crf", "22",
-            "-movflags", "+faststart",
-            output_path,
+            slides_mp4,
         ], capture_output=True)
 
         if result.returncode != 0:
-            raise Exception(f"FFmpeg error: {result.stderr.decode()[-500:]}")
+            raise Exception(f"FFmpeg slides error: {result.stderr.decode()[-500:]}")
+
+        # Combinar vídeo + narração
+        if audio_path and os.path.exists(audio_path):
+            result = subprocess.run([
+                "ffmpeg", "-y",
+                "-i", slides_mp4,
+                "-i", audio_path,
+                "-map", "0:v:0", "-map", "1:a:0",
+                "-c:v", "copy",
+                "-c:a", "aac", "-b:a", "192k",
+                "-shortest",
+                "-movflags", "+faststart",
+                output_path,
+            ], capture_output=True)
+        else:
+            os.rename(slides_mp4, output_path)
+            result = type("R", (), {"returncode": 0})()
+
+        if result.returncode != 0:
+            raise Exception(f"FFmpeg merge error: {result.stderr.decode()[-500:]}")
 
     print(f"✅ Vídeo criado: {output_path}")
     return output_path
