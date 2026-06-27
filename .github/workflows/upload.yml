@@ -1,0 +1,39 @@
+name: Upload vídeo Ritmos do Brasil
+
+on:
+  schedule:
+    - cron: '0 17 * * *'  # 14h BRT (17h UTC) todos os dias
+  workflow_dispatch:       # permite rodar manualmente
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalar ffmpeg e fontes
+        run: sudo apt-get install -y ffmpeg fonts-liberation
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: pip-${{ hashFiles('requirements.txt') }}
+
+      - name: Instalar dependências
+        run: pip install -r requirements.txt
+
+      - name: Gerar e publicar vídeo
+        run: python src/main.py
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          SUNO_COOKIE:        ${{ secrets.SUNO_COOKIE }}
+          YOUTUBE_CLIENT_ID:     ${{ secrets.YOUTUBE_CLIENT_ID }}
+          YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
+          YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
