@@ -1,14 +1,15 @@
-name: Upload vídeo Ritmos do Brasil
+name: Ritmos do Brasil — Postar Short
 
 on:
   schedule:
-    - cron: '0 17 * * *'  # 14h BRT (17h UTC) todos os dias
-  workflow_dispatch:       # permite rodar manualmente
+    - cron: '0 9 * * *'   # 06h BRT (9h UTC)
+    - cron: '0 21 * * *'  # 18h BRT (21h UTC)
+  workflow_dispatch:
 
 jobs:
   upload:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 15
 
     steps:
       - uses: actions/checkout@v4
@@ -29,11 +30,10 @@ jobs:
       - name: Instalar dependências
         run: pip install -r requirements.txt
 
-      - name: Gerar e publicar vídeo
+      - name: Gerar e publicar Short
         run: python src/main.py
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          SUNO_COOKIE:        ${{ secrets.SUNO_COOKIE }}
+          ANTHROPIC_API_KEY:     ${{ secrets.ANTHROPIC_API_KEY }}
           YOUTUBE_CLIENT_ID:     ${{ secrets.YOUTUBE_CLIENT_ID }}
           YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
           YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}

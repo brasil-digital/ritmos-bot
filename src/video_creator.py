@@ -2,158 +2,192 @@ import os
 import math
 import subprocess
 import tempfile
+import textwrap
 from PIL import Image, ImageDraw, ImageFont
 
-W, H = 1920, 1080
-FONT_PATH_BOLD = "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf"
-FONT_PATH = "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf"
+# YouTube Shorts: vertical 9:16
+W, H = 1080, 1920
 
-# Brand colors — Brasil
+FONT_BOLD = "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf"
+FONT_REG = "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf"
+
+# Paleta Brasil
 GREEN = (0, 168, 89)
-YELLOW = (255, 220, 0)
-WHITE = (240, 240, 240)
-LIGHT_GRAY = (180, 180, 200)
-BG_TOP = (8, 8, 18)
-BG_BOT = (18, 28, 22)
+YELLOW = (255, 210, 0)
+BLUE = (0, 39, 118)
+WHITE = (245, 245, 245)
+LIGHT = (200, 210, 200)
+BG_A = (10, 10, 20)
+BG_B = (15, 30, 20)
+
+# Gradientes por tipo de conteúdo
+GRADIENTS = {
+    "curiosidade":    ((10, 5, 30), (25, 15, 50)),
+    "historia":       ((20, 10, 5), (40, 20, 10)),
+    "artista_lenda":  ((5, 15, 30), (10, 30, 50)),
+    "artista_atual":  ((5, 25, 15), (10, 45, 25)),
+    "genero":         ((25, 10, 5), (50, 20, 10)),
+    "samba":          ((20, 5, 5),  (40, 10, 10)),
+    "forro":          ((25, 15, 5), (50, 30, 10)),
+    "bossa_nova":     ((5, 10, 30), (10, 20, 55)),
+    "default":        ((8, 15, 8),  (18, 30, 18)),
+}
 
 
-def _load_font(path, size):
+def _font(path, size):
     try:
         return ImageFont.truetype(path, size)
     except Exception:
         return ImageFont.load_default()
 
 
-def _draw_gradient(draw):
+def _gradient(draw, top, bot):
     for y in range(H):
-        ratio = y / H
-        r = int(BG_TOP[0] + (BG_BOT[0] - BG_TOP[0]) * ratio)
-        g = int(BG_TOP[1] + (BG_BOT[1] - BG_TOP[1]) * ratio)
-        b = int(BG_TOP[2] + (BG_BOT[2] - BG_TOP[2]) * ratio)
+        t = y / H
+        r = int(top[0] + (bot[0] - top[0]) * t)
+        g = int(top[1] + (bot[1] - top[1]) * t)
+        b = int(top[2] + (bot[2] - top[2]) * t)
         draw.line([(0, y), (W, y)], fill=(r, g, b))
 
 
-def _split_lyrics(lyrics, num_slides):
-    # Keep section headers with their content
-    lines = [l.strip() for l in lyrics.split("\n")]
-    chunks, current = [], []
-    lines_per_chunk = max(1, math.ceil(len(lines) / num_slides))
+def _wrap_text(text, font, max_width, draw):
+    """Wrap text to fit within max_width pixels."""
+    words = text.split()
+    lines = []
+    current = []
 
-    for line in lines:
-        current.append(line)
-        if len(current) >= lines_per_chunk:
-            chunks.append("\n".join(current))
-            current = []
-
+    for word in words:
+        test = " ".join(current + [word])
+        bbox = draw.textbbox((0, 0), test, font=font)
+        if bbox[2] - bbox[0] <= max_width:
+            current.append(word)
+        else:
+            if current:
+                lines.append(" ".join(current))
+            current = [word]
     if current:
-        chunks.append("\n".join(current))
+        lines.append(" ".join(current))
+    return lines
 
-    return chunks[:num_slides]
 
-
-def _make_slide(text, title, genre, slide_num, total, logo_path):
-    img = Image.new("RGB", (W, H), BG_TOP)
+def _make_slide(slide_text, slide_num, total_slides, content_type, subject, logo_path):
+    img = Image.new("RGB", (W, H), BG_A)
     draw = ImageDraw.Draw(img)
-    _draw_gradient(draw)
 
-    # Top stripe — Brasil flag colors
-    draw.rectangle([(0, 0), (W, 7)], fill=GREEN)
-    draw.rectangle([(0, 7), (W, 14)], fill=YELLOW)
+    grad = GRADIENTS.get(content_type, GRADIENTS["default"])
+    _gradient(draw, grad[0], grad[1])
+
+    # Decorative background circles (subtle)
+    for cx, cy, r, alpha in [(W // 2, H // 3, 350, 15), (W // 4, 2 * H // 3, 200, 10)]:
+        for dr in range(r, r - 40, -5):
+            draw.ellipse([(cx - dr, cy - dr), (cx + dr, cy + dr)],
+                         outline=(255, 255, 255, alpha), width=1)
+
+    # Top stripe
+    draw.rectangle([(0, 0), (W, 10)], fill=GREEN)
+    draw.rectangle([(0, 10), (W, 20)], fill=YELLOW)
 
     # Bottom stripe
-    draw.rectangle([(0, H - 14), (W, H - 7)], fill=YELLOW)
-    draw.rectangle([(0, H - 7), (W, H)], fill=GREEN)
+    draw.rectangle([(0, H - 20), (W, H - 10)], fill=YELLOW)
+    draw.rectangle([(0, H - 10), (W, H)], fill=GREEN)
 
-    f_title = _load_font(FONT_PATH_BOLD, 56)
-    f_genre = _load_font(FONT_PATH, 34)
-    f_lyrics = _load_font(FONT_PATH, 46)
-    f_small = _load_font(FONT_PATH, 26)
+    f_brand = _font(FONT_BOLD, 38)
+    f_subject = _font(FONT_REG, 32)
+    f_main = _font(FONT_BOLD, 64)
+    f_cta = _font(FONT_BOLD, 52)
+    f_small = _font(FONT_REG, 28)
+    f_counter = _font(FONT_REG, 30)
 
-    # Song title
-    draw.text((W // 2, 60), title, font=f_title, fill=WHITE, anchor="mm")
-
-    # Genre badge
-    draw.text((W // 2, 125), f"♪  {genre.upper()}  ♪", font=f_genre, fill=GREEN, anchor="mm")
-
-    # Separator
-    draw.rectangle([(W // 4, 155), (3 * W // 4, 157)], fill=(50, 60, 60))
-
-    # Lyrics
-    y = H // 2 - 80
-    for line in text.split("\n"):
-        line = line.strip()
-        if not line:
-            y += 22
-            continue
-        if line.startswith("[") and line.endswith("]"):
-            draw.text((W // 2, y), line, font=f_genre, fill=(140, 160, 200), anchor="mm")
-            y += 48
-        else:
-            draw.text((W // 2, y), line, font=f_lyrics, fill=WHITE, anchor="mm")
-            y += 58
-
-    # Branding
-    draw.text((W // 2, H - 40), "Ritmos do Brasil", font=f_genre, fill=GREEN, anchor="mm")
-    draw.text((W - 50, H - 40), f"{slide_num}/{total}", font=f_small, fill=(90, 90, 110), anchor="rm")
-
-    # Logo
+    # Logo top-left
     if logo_path and os.path.exists(logo_path):
         try:
             logo = Image.open(logo_path).convert("RGBA")
-            logo.thumbnail((90, 90), Image.LANCZOS)
-            img.paste(logo, (40, 40), logo)
-        except Exception as e:
-            print(f"Aviso logo: {e}")
+            logo.thumbnail((100, 100), Image.LANCZOS)
+            img.paste(logo, (40, 35), logo)
+        except Exception:
+            pass
+
+    # Brand name top-right
+    draw.text((W - 40, 65), "Ritmos do Brasil", font=f_brand, fill=GREEN, anchor="rm")
+
+    # Subject pill (centered, below brand)
+    if subject and slide_num < total_slides:
+        subj_text = f"♪  {subject.upper()}  ♪"
+        draw.text((W // 2, 170), subj_text, font=f_subject, fill=YELLOW, anchor="mm")
+
+    # Separator line
+    sep_y = 220
+    draw.rectangle([(80, sep_y), (W - 80, sep_y + 2)], fill=(60, 80, 60))
+
+    # Main text — centered vertically in remaining space
+    is_cta = slide_num == total_slides
+    font_main = f_cta if is_cta else f_main
+    max_w = W - 120
+    lines = _wrap_text(slide_text, font_main, max_w, draw)
+
+    line_h = 80 if not is_cta else 70
+    total_text_h = len(lines) * line_h
+    start_y = (H - total_text_h) // 2 + 30
+
+    for i, line in enumerate(lines):
+        y = start_y + i * line_h
+        # Shadow
+        draw.text((W // 2 + 2, y + 2), line, font=font_main, fill=(0, 0, 0), anchor="mm")
+        color = GREEN if is_cta else WHITE
+        draw.text((W // 2, y), line, font=font_main, fill=color, anchor="mm")
+
+    # Progress dots at bottom
+    dot_r = 10
+    dot_gap = 35
+    total_w = total_slides * (2 * dot_r) + (total_slides - 1) * (dot_gap - 2 * dot_r)
+    start_x = (W - total_w) // 2 + dot_r
+    for d in range(total_slides):
+        cx = start_x + d * dot_gap
+        cy = H - 50
+        color = GREEN if d == slide_num - 1 else (60, 80, 60)
+        draw.ellipse([(cx - dot_r, cy - dot_r), (cx + dot_r, cy + dot_r)], fill=color)
 
     return img
 
 
-def create_video(concept, audio_info, output_path="/tmp/video.mp4", logo_path=None):
-    title = concept["title"]
-    genre = concept["genre"]
-    lyrics = concept["lyrics"]
-    audio_path = audio_info["path"]
-    duration = float(audio_info.get("duration", 180))
+def create_video(content, output_path="/tmp/ritmos_video.mp4", logo_path=None):
+    slides = content["slides"]
+    content_type = content.get("type", "default")
+    subject = content.get("subject", "")
 
-    print(f"🎬 Montando vídeo: {title}")
-
-    num_slides = 6
-    slides = _split_lyrics(lyrics, num_slides)
-    slide_dur = duration / len(slides)
+    print(f"🎬 Criando Short: {content.get('youtube_title', 'Ritmos do Brasil')}")
+    print(f"   Tipo: {content_type} | Assunto: {subject} | {len(slides)} slides")
 
     with tempfile.TemporaryDirectory() as tmp:
-        slide_imgs = []
-        for i, text in enumerate(slides):
-            img = _make_slide(text, title, genre, i + 1, len(slides), logo_path)
+        imgs = []
+        for i, slide in enumerate(slides):
+            img = _make_slide(
+                slide["text"], i + 1, len(slides),
+                content_type, subject, logo_path
+            )
             path = os.path.join(tmp, f"slide_{i:02d}.png")
             img.save(path)
-            slide_imgs.append(path)
+            imgs.append((path, slide.get("duration", 9)))
             print(f"   Slide {i+1}/{len(slides)}")
 
         concat_file = os.path.join(tmp, "slides.txt")
         with open(concat_file, "w") as f:
-            for p in slide_imgs:
-                f.write(f"file '{p}'\n")
-                f.write(f"duration {slide_dur:.3f}\n")
-            f.write(f"file '{slide_imgs[-1]}'\n")
+            for path, dur in imgs:
+                f.write(f"file '{path}'\n")
+                f.write(f"duration {dur}\n")
+            f.write(f"file '{imgs[-1][0]}'\n")
 
-        slides_mp4 = os.path.join(tmp, "slides.mp4")
-        subprocess.run([
+        result = subprocess.run([
             "ffmpeg", "-y",
             "-f", "concat", "-safe", "0", "-i", concat_file,
-            "-vf", "fps=24,scale=1920:1080:flags=lanczos,format=yuv420p",
-            "-c:v", "libx264", "-preset", "fast", "-crf", "23",
-            slides_mp4,
-        ], check=True, capture_output=True)
-
-        subprocess.run([
-            "ffmpeg", "-y",
-            "-i", slides_mp4, "-i", audio_path,
-            "-map", "0:v:0", "-map", "1:a:0",
-            "-c:v", "copy", "-c:a", "aac", "-b:a", "192k",
-            "-shortest",
+            "-vf", "fps=30,scale=1080:1920:flags=lanczos,format=yuv420p",
+            "-c:v", "libx264", "-preset", "fast", "-crf", "22",
+            "-movflags", "+faststart",
             output_path,
-        ], check=True, capture_output=True)
+        ], capture_output=True)
 
-    print(f"✅ Vídeo pronto: {output_path}")
+        if result.returncode != 0:
+            raise Exception(f"FFmpeg error: {result.stderr.decode()[-500:]}")
+
+    print(f"✅ Vídeo criado: {output_path}")
     return output_path

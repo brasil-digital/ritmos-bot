@@ -2,8 +2,7 @@ import os
 import sys
 import traceback
 
-from concept_generator import generate_concept
-from music_generator import generate_music
+from content_generator import generate_content
 from video_creator import create_video
 from youtube_uploader import upload_video
 
@@ -14,25 +13,21 @@ def main():
     print("🇧🇷 Ritmos do Brasil Bot — Iniciando...\n")
 
     try:
-        print("📝 Gerando conceito da música...")
-        concept = generate_concept()
-        print(f"✅ {concept['genre'].upper()} — \"{concept['title']}\"")
-        print(f"   Tema: {concept['story']}\n")
+        print("📝 Gerando conteúdo sobre música brasileira...")
+        content = generate_content()
+        print(f"✅ Tema: {content['type']} — {content['subject']}")
+        print(f"   Título: {content['youtube_title']}\n")
 
-        print("🎵 Gerando música no Suno...")
-        audio_info = generate_music(concept, output_path="/tmp/ritmos_audio.mp3")
-        print(f"✅ Áudio pronto ({audio_info['duration']:.0f}s)\n")
-
-        print("🎬 Criando lyric video...")
+        print("🎬 Criando YouTube Short...")
         logo = LOGO_PATH if os.path.exists(LOGO_PATH) else None
-        video_path = create_video(concept, audio_info, "/tmp/ritmos_video.mp4", logo_path=logo)
+        video_path = create_video(content, "/tmp/ritmos_video.mp4", logo_path=logo)
 
         print("\n📤 Publicando no YouTube...")
-        result = upload_video(video_path, concept)
+        result = upload_video(video_path, content)
 
-        print(f"\n🎉 Publicado com sucesso!")
-        print(f"   Título : {concept['youtube_title']}")
-        print(f"   URL    : {result['url']}")
+        print(f"\n🎉 Short publicado!")
+        print(f"   Título: {content['youtube_title']}")
+        print(f"   URL   : {result['url']}")
 
     except Exception as e:
         print(f"\n❌ Erro: {e}")
