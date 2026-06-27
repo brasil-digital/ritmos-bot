@@ -12,7 +12,7 @@ def _get_client():
         client_id=os.environ["YOUTUBE_CLIENT_ID"],
         client_secret=os.environ["YOUTUBE_CLIENT_SECRET"],
         token_uri="https://oauth2.googleapis.com/token",
-        scopes=["https://www.googleapis.com/auth/youtube.upload"],
+        scopes=["https://www.googleapis.com/auth/youtube"],
     )
     creds.refresh(Request())
     return build("youtube", "v3", credentials=creds)

@@ -26,11 +26,13 @@ client_config = {
 
 flow = InstalledAppFlow.from_client_config(
     client_config,
-    scopes=["https://www.googleapis.com/auth/youtube.upload"],
+    scopes=["https://www.googleapis.com/auth/youtube"],
 )
 
 creds = flow.run_local_server(port=0)
 
-print("\n✅ Tokens obtidos:")
+import sys
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+print("\nTokens obtidos com sucesso!")
 print(f"\nYOUTUBE_REFRESH_TOKEN={creds.refresh_token}")
 print("\nCopie esse valor e salve como secret no GitHub!")
