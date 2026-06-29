@@ -70,12 +70,30 @@ def _wrap_text(text, font, max_width, draw):
     return lines
 
 
-def _make_slide(slide_text, slide_num, total_slides, content_type, subject, logo_path):
+def _make_slide(slide_text, slide_num, total_slides, content_type, subject, logo_path, radio_logo_path=None):
     img = Image.new("RGB", (W, H), BG_A)
     draw = ImageDraw.Draw(img)
 
     grad = GRADIENTS.get(content_type, GRADIENTS["default"])
     _gradient(draw, grad[0], grad[1])
+
+    # Watermark: Rádio IA Fala Brasil logo (centralizado, semitransparente)
+    if radio_logo_path and os.path.exists(radio_logo_path):
+        try:
+            wm = Image.open(radio_logo_path).convert("RGBA")
+            wm_size = int(W * 0.72)
+            wm = wm.resize((wm_size, wm_size), Image.LANCZOS)
+            r, g, b, a = wm.split()
+            a = a.point(lambda x: int(x * 0.18))
+            wm.putalpha(a)
+            wm_x = (W - wm_size) // 2
+            wm_y = (H - wm_size) // 2 - 40
+            img_rgba = img.convert("RGBA")
+            img_rgba.paste(wm, (wm_x, wm_y), wm)
+            img = img_rgba.convert("RGB")
+            draw = ImageDraw.Draw(img)
+        except Exception:
+            pass
 
     # Decorative background circles (subtle)
     for cx, cy, r, alpha in [(W // 2, H // 3, 350, 15), (W // 4, 2 * H // 3, 200, 10)]:
@@ -164,7 +182,7 @@ def _audio_duration(audio_path: str) -> float:
     return 45.0
 
 
-def create_video(content, output_path="/tmp/ritmos_video.mp4", logo_path=None, audio_path=None):
+def create_video(content, output_path="/tmp/ritmos_video.mp4", logo_path=None, audio_path=None, radio_logo_path=None):
     slides = content["slides"]
     content_type = content.get("type", "default")
     subject = content.get("subject", "")
@@ -186,7 +204,8 @@ def create_video(content, output_path="/tmp/ritmos_video.mp4", logo_path=None, a
         for i, slide in enumerate(slides):
             img = _make_slide(
                 slide["text"], i + 1, len(slides),
-                content_type, subject, logo_path
+                content_type, subject, logo_path,
+                radio_logo_path=radio_logo_path
             )
             path = os.path.join(tmp, f"slide_{i:02d}.png")
             img.save(path)

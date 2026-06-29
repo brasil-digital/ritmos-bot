@@ -8,6 +8,7 @@ from video_creator import create_video
 from youtube_uploader import upload_video
 
 LOGO_PATH = os.path.join(os.path.dirname(__file__), "..", "assets", "logo.png")
+RADIO_LOGO_PATH = os.path.join(os.path.dirname(__file__), "..", "assets", "radio_logo.png")
 
 
 def main():
@@ -24,7 +25,8 @@ def main():
 
         print("\n🎬 Criando YouTube Short com narração...")
         logo = LOGO_PATH if os.path.exists(LOGO_PATH) else None
-        video_path = create_video(content, "/tmp/ritmos_video.mp4", logo_path=logo, audio_path=audio_path)
+        radio_logo = RADIO_LOGO_PATH if os.path.exists(RADIO_LOGO_PATH) else None
+        video_path = create_video(content, "/tmp/ritmos_video.mp4", logo_path=logo, audio_path=audio_path, radio_logo_path=radio_logo)
 
         print("\n📤 Publicando no YouTube...")
         result = upload_video(video_path, content)
