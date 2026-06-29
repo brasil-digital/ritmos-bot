@@ -95,12 +95,6 @@ def _make_slide(slide_text, slide_num, total_slides, content_type, subject, logo
         except Exception:
             pass
 
-    # Decorative background circles (subtle)
-    for cx, cy, r, alpha in [(W // 2, H // 3, 350, 15), (W // 4, 2 * H // 3, 200, 10)]:
-        for dr in range(r, r - 40, -5):
-            draw.ellipse([(cx - dr, cy - dr), (cx + dr, cy + dr)],
-                         outline=(255, 255, 255, alpha), width=1)
-
     # Top stripe
     draw.rectangle([(0, 0), (W, 10)], fill=GREEN)
     draw.rectangle([(0, 10), (W, 20)], fill=YELLOW)

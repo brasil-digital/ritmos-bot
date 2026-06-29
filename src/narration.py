@@ -20,6 +20,7 @@ def generate_narration(script: str, output_path: str = "/tmp/narration.mp3") -> 
         speed=0.95,  # levemente mais lento — mais natural e claro
     )
 
-    response.stream_to_file(output_path)
+    with open(output_path, "wb") as f:
+        f.write(response.content)
     print(f"✅ Áudio gerado: {output_path}")
     return output_path
