@@ -2,8 +2,13 @@ import anthropic
 import json
 import os
 import random
+import re
+import urllib.request
 
 client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
+
+CHANNEL_ID = "UC-Y3ELG72lJeIBdcTqmAuOA"
+FEED_URL = f"https://www.youtube.com/feeds/videos.xml?channel_id={CHANNEL_ID}"
 
 CONTENT_TYPES = [
     ("curiosidade", "Uma curiosidade incrível e pouco conhecida"),
@@ -42,9 +47,32 @@ HOOKS = [
 ]
 
 
+def _recent_video_titles(limit=15):
+    """Busca os títulos dos últimos vídeos do canal via RSS (sem API key)."""
+    try:
+        with urllib.request.urlopen(FEED_URL, timeout=10) as resp:
+            xml = resp.read().decode("utf-8")
+        titles = re.findall(r"<media:title>(.*?)</media:title>", xml)
+        return titles[:limit]
+    except Exception as e:
+        print(f"⚠️  Não consegui ler o feed do canal (seguindo sem histórico): {e}")
+        return []
+
+
 def generate_content():
     content_type, content_desc = random.choice(CONTENT_TYPES)
     hook = random.choice(HOOKS)
+
+    recent = _recent_video_titles()
+    avoid_block = ""
+    if recent:
+        lista = "\n".join(f"- {t}" for t in recent)
+        avoid_block = f"""
+IMPORTANTE — o canal JÁ publicou vídeos sobre os assuntos abaixo. É PROIBIDO repetir esses assuntos, músicas, artistas ou ângulos (nem variações do mesmo tema):
+{lista}
+
+Escolha um assunto específico DIFERENTE de todos os listados acima.
+"""
 
     response = client.messages.create(
         model="claude-haiku-4-5-20251001",
@@ -55,6 +83,7 @@ def generate_content():
 
 Tipo de conteúdo: {content_desc}
 Hook inicial: "{hook}"
+{avoid_block}
 
 Crie um roteiro para um Short do YouTube sobre música brasileira. O vídeo terá 5 slides de texto de ~9 segundos cada (total ~45 segundos).
 
