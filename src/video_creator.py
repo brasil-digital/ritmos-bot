@@ -8,8 +8,26 @@ from PIL import Image, ImageDraw, ImageFont
 # YouTube Shorts: vertical 9:16
 W, H = 1080, 1920
 
-FONT_BOLD = "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf"
-FONT_REG = "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf"
+def _find_font(candidates):
+    for path in candidates:
+        if os.path.exists(path):
+            return path
+    return candidates[0]
+
+
+FONT_BOLD = _find_font([
+    "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf",
+    "C:/Windows/Fonts/arialbd.ttf",
+])
+FONT_REG = _find_font([
+    "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
+    "C:/Windows/Fonts/arial.ttf",
+])
+# Fonte de display para o cartão de título (Impact no Windows, Liberation no CI)
+FONT_DISPLAY = _find_font([
+    "C:/Windows/Fonts/impact.ttf",
+    "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf",
+])
 
 # Paleta Brasil
 GREEN = (0, 168, 89)
@@ -32,6 +50,33 @@ GRADIENTS = {
     "bossa_nova":     ((5, 10, 30), (10, 20, 55)),
     "default":        ((8, 15, 8),  (18, 30, 18)),
 }
+
+# Rótulo da tag do cartão de título por tipo de conteúdo
+TYPE_LABELS = {
+    "curiosidade": "CURIOSIDADE",
+    "historia": "HISTÓRIA",
+    "artista_lenda": "LENDA DA MÚSICA",
+    "artista_atual": "EM ALTA",
+    "genero": "GÊNERO MUSICAL",
+    "rivalidade": "RIVALIDADE",
+    "letra": "SIGNIFICADO DA LETRA",
+    "record": "RECORDE",
+    "tendencia": "TENDÊNCIA",
+    "comparacao": "BATALHA DE ESTILOS",
+    "compositores": "COMPOSITORES",
+    "instrumentos": "INSTRUMENTOS",
+    "carnaval": "CARNAVAL",
+    "sertanejo": "SERTANEJO",
+    "funk": "FUNK BR",
+    "mpb": "MPB",
+    "bossa_nova": "BOSSA NOVA",
+    "samba": "SAMBA",
+    "forro": "FORRÓ",
+    "axe": "AXÉ",
+}
+
+# Duração do cartão de título na abertura do Short (vira a miniatura padrão)
+TITLE_CARD_DUR = 1.3
 
 
 def _font(path, size):
@@ -162,6 +207,117 @@ def _make_slide(slide_text, slide_num, total_slides, content_type, subject, logo
     return img
 
 
+def _fit_display_font(draw, text, max_width, max_lines, start_size, min_size=60):
+    """Encontra o maior tamanho de fonte cujo texto quebrado cabe em max_lines linhas."""
+    size = start_size
+    while size > min_size:
+        font = _font(FONT_DISPLAY, size)
+        lines = _wrap_text(text, font, max_width, draw)
+        if len(lines) <= max_lines and all(
+            draw.textbbox((0, 0), l, font=font)[2] <= max_width for l in lines
+        ):
+            return font, lines
+        size -= 8
+    font = _font(FONT_DISPLAY, min_size)
+    return font, _wrap_text(text, font, max_width, draw)
+
+
+def _make_title_card(content_type, subject, hook, logo_path, radio_logo_path=None):
+    """Cartão de abertura no estilo das thumbnails do canal.
+
+    O YouTube usa um frame do início como miniatura do Short, então este
+    cartão vira a 'capa' do vídeo na página do canal e na busca.
+    """
+    img = Image.new("RGB", (W, H), BG_A)
+    draw = ImageDraw.Draw(img)
+
+    grad = GRADIENTS.get(content_type, GRADIENTS["default"])
+    # Versão mais vibrante do gradiente do tipo
+    top = tuple(min(255, int(c * 1.6)) for c in grad[0])
+    bot = tuple(min(255, int(c * 2.6)) for c in grad[1])
+    _gradient(draw, top, bot)
+
+    # Watermark suave ao fundo
+    if radio_logo_path and os.path.exists(radio_logo_path):
+        try:
+            wm = Image.open(radio_logo_path).convert("RGBA")
+            wm_size = int(W * 0.9)
+            wm = wm.resize((wm_size, wm_size), Image.LANCZOS)
+            r, g, b, a = wm.split()
+            a = a.point(lambda x: int(x * 0.12))
+            wm.putalpha(a)
+            img_rgba = img.convert("RGBA")
+            img_rgba.paste(wm, ((W - wm_size) // 2, (H - wm_size) // 2), wm)
+            img = img_rgba.convert("RGB")
+            draw = ImageDraw.Draw(img)
+        except Exception:
+            pass
+
+    # Faixas Brasil (mais grossas que nos slides)
+    draw.rectangle([(0, 0), (W, 18)], fill=GREEN)
+    draw.rectangle([(0, 18), (W, 36)], fill=YELLOW)
+    draw.rectangle([(0, H - 36), (W, H - 18)], fill=YELLOW)
+    draw.rectangle([(0, H - 18), (W, H)], fill=GREEN)
+
+    # Logo grande no topo (recortado em círculo — o arquivo tem fundo preto)
+    logo_bottom = 150
+    if logo_path and os.path.exists(logo_path):
+        try:
+            logo = Image.open(logo_path).convert("RGBA")
+            logo.thumbnail((190, 190), Image.LANCZOS)
+            mask = Image.new("L", logo.size, 0)
+            ImageDraw.Draw(mask).ellipse([(0, 0), logo.size], fill=255)
+            img.paste(logo, ((W - logo.width) // 2, 110), mask)
+            logo_bottom = 110 + logo.height
+        except Exception:
+            pass
+
+    f_brand = _font(FONT_BOLD, 52)
+    draw.text((W // 2, logo_bottom + 55), "RITMOS DO BRASIL",
+              font=f_brand, fill=YELLOW, anchor="mm",
+              stroke_width=4, stroke_fill=(0, 0, 0))
+
+    # Tag do tipo de conteúdo (pílula amarela)
+    label = TYPE_LABELS.get(content_type, "MÚSICA BRASILEIRA")
+    f_tag = _font(FONT_BOLD, 46)
+    tb = draw.textbbox((0, 0), label, font=f_tag)
+    tw, th = tb[2] - tb[0], tb[3] - tb[1]
+    tag_y = 640
+    draw.rounded_rectangle(
+        [(W // 2 - tw // 2 - 36, tag_y - th // 2 - 26),
+         (W // 2 + tw // 2 + 36, tag_y + th // 2 + 26)],
+        radius=22, fill=YELLOW)
+    draw.text((W // 2, tag_y), label, font=f_tag, fill=(20, 20, 0), anchor="mm")
+
+    # Assunto em letras GIGANTES (o "título da thumbnail")
+    subject_up = (subject or "MÚSICA BRASILEIRA").upper()
+    font_subj, lines = _fit_display_font(draw, subject_up, W - 140, 3, 190)
+    asc, desc = font_subj.getmetrics()
+    line_h = int((asc + desc) * 1.02)
+    total_h = line_h * len(lines)
+    y0 = 1010 - total_h // 2
+    for i, line in enumerate(lines):
+        draw.text((W // 2, y0 + i * line_h), line, font=font_subj,
+                  fill=WHITE, anchor="mm", stroke_width=10, stroke_fill=(0, 0, 0))
+
+    # Hook como teaser abaixo do assunto
+    if hook:
+        f_hook = _font(FONT_BOLD, 54)
+        hook_lines = _wrap_text(hook, f_hook, W - 200, draw)[:2]
+        hy = y0 + total_h + 80
+        for i, hl in enumerate(hook_lines):
+            draw.text((W // 2, hy + i * 66), hl, font=f_hook,
+                      fill=YELLOW, anchor="mm", stroke_width=4, stroke_fill=(0, 0, 0))
+
+    # Chamada no rodapé
+    f_cta = _font(FONT_BOLD, 44)
+    draw.text((W // 2, H - 140), "ASSISTA ATÉ O FINAL",
+              font=f_cta, fill=WHITE, anchor="mm",
+              stroke_width=3, stroke_fill=(0, 0, 0))
+
+    return img
+
+
 def _audio_duration(audio_path: str) -> float:
     """Get audio duration in seconds using ffprobe."""
     result = subprocess.run([
@@ -191,10 +347,22 @@ def create_video(content, output_path="/tmp/ritmos_video.mp4", logo_path=None, a
     else:
         total_duration = len(slides) * 9.0
 
-    slide_dur = total_duration / len(slides)
+    # Cartão de título abre o vídeo (vira a miniatura padrão do Short);
+    # os slides dividem o tempo restante para manter o total = duração do áudio.
+    card_dur = TITLE_CARD_DUR if total_duration > 8 else 0
+    slide_dur = (total_duration - card_dur) / len(slides)
 
     with tempfile.TemporaryDirectory() as tmp:
         imgs = []
+        if card_dur:
+            card = _make_title_card(
+                content_type, subject, content.get("hook", ""),
+                logo_path, radio_logo_path=radio_logo_path
+            )
+            card_path = os.path.join(tmp, "slide_card.png")
+            card.save(card_path)
+            imgs.append((card_path, card_dur))
+            print("   Cartão de título (capa do Short)")
         for i, slide in enumerate(slides):
             img = _make_slide(
                 slide["text"], i + 1, len(slides),
