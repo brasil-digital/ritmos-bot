@@ -12,10 +12,10 @@ RADIO_LOGO_PATH = os.path.join(os.path.dirname(__file__), "..", "assets", "radio
 
 
 def main():
-    print("🇧🇷 Ritmos do Brasil Bot — Iniciando...\n")
+    print("🎵 Ritmos do Brasil e do Mundo — Bot iniciando...\n")
 
     try:
-        print("📝 Gerando conteúdo sobre música brasileira...")
+        print("📝 Gerando conteúdo sobre ritmos e música do mundo...")
         content = generate_content()
         print(f"✅ Tema: {content['type']} — {content['subject']}")
         print(f"   Título: {content['youtube_title']}\n")

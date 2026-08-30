@@ -29,7 +29,10 @@ FONT_DISPLAY = _find_font([
     "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf",
 ])
 
-# Paleta Brasil
+# Nome do canal (mantenha igual a CHANNEL_NAME em content_generator.py)
+BRAND_NAME = "Ritmos do Brasil e do Mundo"
+
+# Paleta da marca (verde/amarelo — herdada do logo do canal)
 GREEN = (0, 168, 89)
 YELLOW = (255, 210, 0)
 BLUE = (0, 39, 118)
@@ -38,41 +41,42 @@ LIGHT = (200, 210, 200)
 BG_A = (10, 10, 20)
 BG_B = (15, 30, 20)
 
-# Gradientes por tipo de conteúdo
+# Gradientes por tipo de conteúdo (ângulo)
 GRADIENTS = {
     "curiosidade":    ((10, 5, 30), (25, 15, 50)),
     "historia":       ((20, 10, 5), (40, 20, 10)),
+    "genero":         ((25, 10, 5), (50, 20, 10)),
+    "lenda":          ((5, 15, 30), (10, 30, 50)),
+    "em_alta":        ((5, 25, 15), (10, 45, 25)),
+    "instrumento":    ((22, 12, 5), (44, 26, 12)),
+    "rivalidade":     ((20, 5, 5),  (40, 10, 10)),
+    "letra":          ((5, 10, 30), (10, 20, 55)),
+    "recorde":        ((25, 20, 5), (50, 40, 10)),
+    "influencia":     ((8, 22, 24), (14, 40, 44)),
+    # chaves antigas (compatibilidade)
     "artista_lenda":  ((5, 15, 30), (10, 30, 50)),
     "artista_atual":  ((5, 25, 15), (10, 45, 25)),
-    "genero":         ((25, 10, 5), (50, 20, 10)),
-    "samba":          ((20, 5, 5),  (40, 10, 10)),
-    "forro":          ((25, 15, 5), (50, 30, 10)),
     "bossa_nova":     ((5, 10, 30), (10, 20, 55)),
     "default":        ((8, 15, 8),  (18, 30, 18)),
 }
 
-# Rótulo da tag do cartão de título por tipo de conteúdo
+# Rótulo da tag do cartão de título por tipo de conteúdo (ângulo)
 TYPE_LABELS = {
     "curiosidade": "CURIOSIDADE",
     "historia": "HISTÓRIA",
+    "genero": "GÊNERO MUSICAL",
+    "lenda": "LENDA DA MÚSICA",
+    "em_alta": "EM ALTA",
+    "instrumento": "INSTRUMENTO",
+    "rivalidade": "RIVALIDADE",
+    "letra": "POR TRÁS DA LETRA",
+    "recorde": "RECORDE",
+    "influencia": "CONEXÕES",
+    # chaves antigas (compatibilidade)
     "artista_lenda": "LENDA DA MÚSICA",
     "artista_atual": "EM ALTA",
-    "genero": "GÊNERO MUSICAL",
-    "rivalidade": "RIVALIDADE",
-    "letra": "SIGNIFICADO DA LETRA",
     "record": "RECORDE",
-    "tendencia": "TENDÊNCIA",
-    "comparacao": "BATALHA DE ESTILOS",
-    "compositores": "COMPOSITORES",
-    "instrumentos": "INSTRUMENTOS",
-    "carnaval": "CARNAVAL",
-    "sertanejo": "SERTANEJO",
-    "funk": "FUNK BR",
-    "mpb": "MPB",
-    "bossa_nova": "BOSSA NOVA",
-    "samba": "SAMBA",
-    "forro": "FORRÓ",
-    "axe": "AXÉ",
+    "instrumentos": "INSTRUMENTO",
 }
 
 # Duração do cartão de título na abertura do Short (vira a miniatura padrão)
@@ -165,7 +169,7 @@ def _make_slide(slide_text, slide_num, total_slides, content_type, subject, logo
             pass
 
     # Brand name top-right
-    draw.text((W - 40, 65), "Ritmos do Brasil", font=f_brand, fill=GREEN, anchor="rm")
+    draw.text((W - 40, 65), BRAND_NAME, font=f_brand, fill=GREEN, anchor="rm")
 
     # Subject pill (centered, below brand)
     if subject and slide_num < total_slides:
@@ -273,12 +277,13 @@ def _make_title_card(content_type, subject, hook, logo_path, radio_logo_path=Non
             pass
 
     f_brand = _font(FONT_BOLD, 52)
-    draw.text((W // 2, logo_bottom + 55), "RITMOS DO BRASIL",
-              font=f_brand, fill=YELLOW, anchor="mm",
-              stroke_width=4, stroke_fill=(0, 0, 0))
+    for i, ln in enumerate(("RITMOS DO BRASIL", "E DO MUNDO")):
+        draw.text((W // 2, logo_bottom + 40 + i * 58), ln,
+                  font=f_brand, fill=YELLOW, anchor="mm",
+                  stroke_width=4, stroke_fill=(0, 0, 0))
 
     # Tag do tipo de conteúdo (pílula amarela)
-    label = TYPE_LABELS.get(content_type, "MÚSICA BRASILEIRA")
+    label = TYPE_LABELS.get(content_type, "RITMOS DO BRASIL E DO MUNDO")
     f_tag = _font(FONT_BOLD, 46)
     tb = draw.textbbox((0, 0), label, font=f_tag)
     tw, th = tb[2] - tb[0], tb[3] - tb[1]
@@ -290,7 +295,7 @@ def _make_title_card(content_type, subject, hook, logo_path, radio_logo_path=Non
     draw.text((W // 2, tag_y), label, font=f_tag, fill=(20, 20, 0), anchor="mm")
 
     # Assunto em letras GIGANTES (o "título da thumbnail")
-    subject_up = (subject or "MÚSICA BRASILEIRA").upper()
+    subject_up = (subject or "MÚSICA DO MUNDO").upper()
     font_subj, lines = _fit_display_font(draw, subject_up, W - 140, 3, 190)
     asc, desc = font_subj.getmetrics()
     line_h = int((asc + desc) * 1.02)
@@ -337,7 +342,7 @@ def create_video(content, output_path="/tmp/ritmos_video.mp4", logo_path=None, a
     content_type = content.get("type", "default")
     subject = content.get("subject", "")
 
-    print(f"🎬 Criando Short: {content.get('youtube_title', 'Ritmos do Brasil')}")
+    print(f"🎬 Criando Short: {content.get('youtube_title', BRAND_NAME)}")
     print(f"   Tipo: {content_type} | Assunto: {subject} | {len(slides)} slides")
 
     # Calcular duração de cada slide baseado no áudio
