@@ -33,8 +33,8 @@ REGIONS = [
     ("eletronica", "a música eletrônica no mundo (house de Chicago, techno de Detroit, a cena de Berlim, drum and bass, dub techno...)"),
 ]
 
-# Peso de cada região no sorteio (Brasil ~1/3)
-REGION_WEIGHTS = {"brasil": 6}
+# Peso de cada região no sorteio. Brasil = soma das outras 11 => ~50%.
+REGION_WEIGHTS = {"brasil": 11}
 DEFAULT_REGION_WEIGHT = 1
 
 # ---------------------------------------------------------------------------
