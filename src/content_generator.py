@@ -11,8 +11,8 @@ CHANNEL_ID = "UC-Y3ELG72lJeIBdcTqmAuOA"
 FEED_URL = f"https://www.youtube.com/feeds/videos.xml?channel_id={CHANNEL_ID}"
 
 # @handle do canal (atualize aqui se reservar outro no YouTube)
-CHANNEL_HANDLE = "@ritmosdomundo"
-CHANNEL_NAME = "Ritmos do Mundo"
+CHANNEL_HANDLE = "@ritmos-do-mundo"
+CHANNEL_NAME = "Ritmos do Brasil e do Mundo"
 
 # ---------------------------------------------------------------------------
 # Regiões / cenas musicais. O Brasil tem peso maior (~1/3 das publicações);

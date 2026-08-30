@@ -12,7 +12,7 @@ RADIO_LOGO_PATH = os.path.join(os.path.dirname(__file__), "..", "assets", "radio
 
 
 def main():
-    print("🎵 Ritmos do Mundo Bot — Iniciando...\n")
+    print("🎵 Ritmos do Brasil e do Mundo — Bot iniciando...\n")
 
     try:
         print("📝 Gerando conteúdo sobre ritmos e música do mundo...")

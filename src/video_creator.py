@@ -29,6 +29,9 @@ FONT_DISPLAY = _find_font([
     "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf",
 ])
 
+# Nome do canal (mantenha igual a CHANNEL_NAME em content_generator.py)
+BRAND_NAME = "Ritmos do Brasil e do Mundo"
+
 # Paleta da marca (verde/amarelo — herdada do logo do canal)
 GREEN = (0, 168, 89)
 YELLOW = (255, 210, 0)
@@ -166,7 +169,7 @@ def _make_slide(slide_text, slide_num, total_slides, content_type, subject, logo
             pass
 
     # Brand name top-right
-    draw.text((W - 40, 65), "Ritmos do Mundo", font=f_brand, fill=GREEN, anchor="rm")
+    draw.text((W - 40, 65), BRAND_NAME, font=f_brand, fill=GREEN, anchor="rm")
 
     # Subject pill (centered, below brand)
     if subject and slide_num < total_slides:
@@ -274,12 +277,13 @@ def _make_title_card(content_type, subject, hook, logo_path, radio_logo_path=Non
             pass
 
     f_brand = _font(FONT_BOLD, 52)
-    draw.text((W // 2, logo_bottom + 55), "RITMOS DO MUNDO",
-              font=f_brand, fill=YELLOW, anchor="mm",
-              stroke_width=4, stroke_fill=(0, 0, 0))
+    for i, ln in enumerate(("RITMOS DO BRASIL", "E DO MUNDO")):
+        draw.text((W // 2, logo_bottom + 40 + i * 58), ln,
+                  font=f_brand, fill=YELLOW, anchor="mm",
+                  stroke_width=4, stroke_fill=(0, 0, 0))
 
     # Tag do tipo de conteúdo (pílula amarela)
-    label = TYPE_LABELS.get(content_type, "RITMOS DO MUNDO")
+    label = TYPE_LABELS.get(content_type, "RITMOS DO BRASIL E DO MUNDO")
     f_tag = _font(FONT_BOLD, 46)
     tb = draw.textbbox((0, 0), label, font=f_tag)
     tw, th = tb[2] - tb[0], tb[3] - tb[1]
@@ -338,7 +342,7 @@ def create_video(content, output_path="/tmp/ritmos_video.mp4", logo_path=None, a
     content_type = content.get("type", "default")
     subject = content.get("subject", "")
 
-    print(f"🎬 Criando Short: {content.get('youtube_title', 'Ritmos do Mundo')}")
+    print(f"🎬 Criando Short: {content.get('youtube_title', BRAND_NAME)}")
     print(f"   Tipo: {content_type} | Assunto: {subject} | {len(slides)} slides")
 
     # Calcular duração de cada slide baseado no áudio
