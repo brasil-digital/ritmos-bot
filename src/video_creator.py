@@ -72,6 +72,8 @@ TYPE_LABELS = {
     "letra": "POR TRÁS DA LETRA",
     "recorde": "RECORDE",
     "influencia": "CONEXÕES",
+    "resistencia": "RESISTÊNCIA",
+    "virada": "A VIRADA",
     # chaves antigas (compatibilidade)
     "artista_lenda": "LENDA DA MÚSICA",
     "artista_atual": "EM ALTA",

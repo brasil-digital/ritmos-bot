@@ -33,8 +33,10 @@ REGIONS = [
     ("eletronica", "a música eletrônica no mundo (house de Chicago, techno de Detroit, a cena de Berlim, drum and bass, dub techno...)"),
 ]
 
-# Peso de cada região no sorteio. Brasil = soma das outras 11 => ~50%.
-REGION_WEIGHTS = {"brasil": 11}
+# Peso de cada região no sorteio. Brasil = 4x a soma das outras 11 => ~80%.
+# Analytics set/2026: os Shorts de artistas BR fazem ~1 mil views cada; os
+# "do Mundo" (qawwali, Masekela...) ficaram em 17–67. O público é brasileiro.
+REGION_WEIGHTS = {"brasil": 44}
 DEFAULT_REGION_WEIGHT = 1
 
 # ---------------------------------------------------------------------------
@@ -52,7 +54,22 @@ ANGLES = [
     ("letra", "O significado profundo por trás de uma letra de música famosa"),
     ("recorde", "Um recorde ou feito histórico da música"),
     ("influencia", "Como um ritmo influenciou (ou foi influenciado por) a música de outro continente"),
+    ("resistencia", "Um artista que enfrentou censura, ditadura, preconceito ou o poder — e o preço que pagou"),
+    ("virada", "Uma decisão surpreendente de um artista (recusou fama, dinheiro ou um contrato; mudou tudo de repente)"),
 ]
+
+# Peso de cada ângulo. Os campeões de views são histórias de conflito/virada
+# com um artista no centro ("a voz que a DITADURA tentou silenciar",
+# "REJEITOU ser popstar americana"); gênero/instrumento/recorde rendem menos.
+ANGLE_WEIGHTS = {
+    "resistencia": 4,
+    "virada": 3,
+    "historia": 3,
+    "lenda": 3,
+    "letra": 2,
+    "rivalidade": 2,
+}
+DEFAULT_ANGLE_WEIGHT = 1
 
 HOOKS = [
     "Você sabia que...",
@@ -85,9 +102,14 @@ def _pick_region():
     return random.choices(REGIONS, weights=weights, k=1)[0]
 
 
+def _pick_angle():
+    weights = [ANGLE_WEIGHTS.get(key, DEFAULT_ANGLE_WEIGHT) for key, _ in ANGLES]
+    return random.choices(ANGLES, weights=weights, k=1)[0]
+
+
 def generate_content():
     region_key, region_desc = _pick_region()
-    angle_key, angle_desc = random.choice(ANGLES)
+    angle_key, angle_desc = _pick_angle()
     hook = random.choice(HOOKS)
 
     recent = _recent_video_titles()
@@ -116,8 +138,18 @@ Hook inicial: "{hook}"
 Crie um roteiro para um Short do YouTube sobre música/ritmos, dentro da região e do ângulo indicados acima. O vídeo terá 5 slides de texto de ~9 segundos cada (total ~45 segundos).
 
 Regras:
-- Escolha UM assunto específico e concreto (um artista, uma música, um gênero, um instrumento, um episódio).
-- Conteúdo factualmente correto. Nada de invenção.
+- Escolha UM assunto específico e concreto. De preferência uma PESSOA (artista) no centro da história, com um conflito, um obstáculo ou uma virada.
+- Conteúdo factualmente correto. Nada de invenção — o conflito tem que ser real e verificável.
+
+Título do YouTube — siga EXATAMENTE esta fórmula, que é a que mais funciona no canal:
+"[emoji] [Nome do artista]: [frase curta com UMA palavra forte em MAIÚSCULAS] | [Gênero]"
+A palavra forte é um verbo ou substantivo de conflito/virada: SALVOU, REJEITOU, DESAFIOU, CENSURADA, DITADURA, ESQUECEU, PROIBIDA, VENCEU, INVENTOR, REVOLUCIONÁRIO...
+Exemplos reais do canal que passaram de 1 mil views:
+- 🎺 Luiz Gonzaga: A Sanfona que SALVOU o Nordeste | Forró
+- 🎤 Clara Nunes: A Voz que a DITADURA Tentou SILENCIAR | Samba
+- 🎵 Marisa Monte REJEITOU Ser Popstar Americana | Shorts
+- 🎸 Alceu Valença: O Trovador que a Indústria ESQUECEU | Shorts
+Sem clickbait falso: a palavra forte tem que ser verdade na história contada.
 - Público brasileiro: a narração é SEMPRE em português do Brasil, mesmo quando o assunto é de outro país. Explique referências estrangeiras para quem nunca ouviu falar.
 
 Responda APENAS com JSON válido, sem markdown:
@@ -134,7 +166,7 @@ Responda APENAS com JSON válido, sem markdown:
     {{ "text": "🎵 {CHANNEL_NAME}\\nInscreva-se para mais!" }}
   ],
   "narration_script": "Script COMPLETO para narração em voz feminina, em português brasileiro natural e empolgante. Deve cobrir todos os slides do vídeo. Entre 80 e 110 palavras (≈45 segundos falados). Tom animado, apaixonado por música. NÃO inclua indicações de cena ou colchetes — apenas o texto que será narrado.",
-  "youtube_title": "Título YouTube otimizado para Shorts (máx 80 chars, inclui emoji)",
+  "youtube_title": "Título seguindo a fórmula acima (máx 80 chars)",
   "youtube_description": "Descrição completa para YouTube (2 parágrafos + hashtags). Mencionar {CHANNEL_HANDLE}",
   "tags": ["musica do mundo", "ritmos", "shorts", "...mais 7 tags relevantes ao assunto..."]
 }}"""
