@@ -56,3 +56,12 @@ def upload_video(video_path, concept):
     url = f"https://www.youtube.com/watch?v={video_id}"
     print(f"✅ Publicado: {url}")
     return {"id": video_id, "url": url}
+
+
+def set_thumbnail(video_id, image_path):
+    """Capa personalizada — só funciona em vídeo longo (Short não aceita por API)."""
+    try:
+        _get_client().thumbnails().set(videoId=video_id, media_body=MediaFileUpload(image_path)).execute()
+        print("🖼️  Capa aplicada.")
+    except Exception as e:
+        print(f"⚠️  Capa não aplicada ({e}) — dá pra subir à mão no Studio.")
