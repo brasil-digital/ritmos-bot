@@ -15,6 +15,20 @@ CHANNEL_HANDLE = "@ritmos-do-mundo"
 CHANNEL_NAME = "Ritmos do Brasil e do Mundo"
 
 # ---------------------------------------------------------------------------
+# Chamada para a live 24h da Rádio (out/2026). Os Shorts trazem muita view e
+# pouco inscrito/hora de exibição; a ideia é levar esse público para a live.
+# O "vídeo relacionado" do Short não pode ser definido pela API — é feito à
+# mão no Studio. Aqui o bot garante a chamada no slide final, na narração e
+# na descrição. /live sempre aponta para a transmissão atual do canal.
+# ---------------------------------------------------------------------------
+LIVE_URL = f"https://www.youtube.com/{CHANNEL_HANDLE}/live"
+LIVE_CTA_SLIDE = "Ouça a Rádio aqui no canal: músicas originais o dia todo!"
+LIVE_CTA_SPOKEN = (
+    "E pra ouvir música o dia inteiro, a Rádio Ritmos do Brasil e do Mundo "
+    "está ao vivo, 24 horas, aqui no canal!"
+)
+
+# ---------------------------------------------------------------------------
 # Regiões / cenas musicais. O Brasil tem peso maior (~1/3 das publicações);
 # as demais regiões dividem o resto.
 # ---------------------------------------------------------------------------
@@ -163,9 +177,9 @@ Responda APENAS com JSON válido, sem markdown:
     {{ "text": "Texto do slide 2 — primeira revelação/fato (máx 100 chars)" }},
     {{ "text": "Texto do slide 3 — aprofundamento/contexto (máx 100 chars)" }},
     {{ "text": "Texto do slide 4 — clímax ou curiosidade surpreendente (máx 100 chars)" }},
-    {{ "text": "🎵 {CHANNEL_NAME}\\nInscreva-se para mais!" }}
+    {{ "text": "{LIVE_CTA_SLIDE}" }}
   ],
-  "narration_script": "Script COMPLETO para narração em voz feminina, em português brasileiro natural e empolgante. Deve cobrir todos os slides do vídeo. Entre 80 e 110 palavras (≈45 segundos falados). Tom animado, apaixonado por música. NÃO inclua indicações de cena ou colchetes — apenas o texto que será narrado.",
+  "narration_script": "Script COMPLETO para narração em voz feminina, em português brasileiro natural e empolgante. Deve cobrir todos os slides do vídeo. Entre 80 e 110 palavras (≈45 segundos falados). Tom animado, apaixonado por música. TERMINE com esta frase exata: '{LIVE_CTA_SPOKEN}' NÃO inclua indicações de cena ou colchetes — apenas o texto que será narrado.",
   "youtube_title": "Título seguindo a fórmula acima (máx 80 chars)",
   "youtube_description": "Descrição completa para YouTube (2 parágrafos + hashtags). Mencionar {CHANNEL_HANDLE}",
   "tags": ["musica do mundo", "ritmos", "shorts", "...mais 7 tags relevantes ao assunto..."]
@@ -178,4 +192,23 @@ Responda APENAS com JSON válido, sem markdown:
         text = text.split("```")[1]
         if text.startswith("json"):
             text = text[4:]
-    return json.loads(text.strip())
+    return _apply_live_cta(json.loads(text.strip()))
+
+
+def _apply_live_cta(content):
+    """Garante a chamada da live no slide final, na narração e na descrição,
+    mesmo que o modelo não siga o prompt."""
+    if content.get("slides"):
+        content["slides"][-1]["text"] = LIVE_CTA_SLIDE
+
+    script = content.get("narration_script", "").strip()
+    low = script.lower()
+    if not ("rádio" in low and "ao vivo" in low):
+        content["narration_script"] = f"{script} {LIVE_CTA_SPOKEN}".strip()
+
+    desc = content.get("youtube_description", "")
+    if LIVE_URL not in desc:
+        content["youtube_description"] = (
+            f"🔴 Rádio {CHANNEL_NAME} AO VIVO 24h: {LIVE_URL}\n\n{desc}"
+        )
+    return content

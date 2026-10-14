@@ -40,6 +40,7 @@ WHITE = (245, 245, 245)
 LIGHT = (200, 210, 200)
 BG_A = (10, 10, 20)
 BG_B = (15, 30, 20)
+LIVE_RED = (230, 33, 23)
 
 # Gradientes por tipo de conteúdo (ângulo)
 GRADIENTS = {
@@ -191,6 +192,22 @@ def _make_slide(slide_text, slide_num, total_slides, content_type, subject, logo
     line_h = 80 if not is_cta else 70
     total_text_h = len(lines) * line_h
     start_y = (H - total_text_h) // 2 + 30
+
+    # Slide final = chamada para a live 24h da Rádio: selo vermelho "AO VIVO"
+    if is_cta:
+        f_live = _font(FONT_BOLD, 56)
+        label = "AO VIVO 24h"
+        lb = draw.textbbox((0, 0), label, font=f_live)
+        lw, lh = lb[2] - lb[0], lb[3] - lb[1]
+        dot_d = 34
+        pill_w = dot_d + 24 + lw
+        px = (W - pill_w) // 2
+        py = start_y - 170
+        draw.rounded_rectangle(
+            [(px - 40, py - lh // 2 - 28), (px + pill_w + 40, py + lh // 2 + 28)],
+            radius=30, fill=LIVE_RED)
+        draw.ellipse([(px, py - dot_d // 2), (px + dot_d, py + dot_d // 2)], fill=WHITE)
+        draw.text((px + dot_d + 24, py), label, font=f_live, fill=WHITE, anchor="lm")
 
     for i, line in enumerate(lines):
         y = start_y + i * line_h

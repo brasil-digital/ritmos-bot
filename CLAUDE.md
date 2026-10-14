@@ -20,6 +20,7 @@ GitHub Actions, branch **`main`**.
 - Ângulos `resistencia` e `virada` com peso maior (`ANGLE_WEIGHTS`); fórmula de título: `[emoji] Artista: frase com PALAVRA forte | Gênero`.
 - Narração sempre em PT-BR. `CHANNEL_HANDLE`/`CHANNEL_NAME` no topo do `content_generator.py`; `BRAND_NAME` no `video_creator.py`.
 - Anti-repetição: o prompt recebe os últimos 15 títulos do canal (RSS público, sem chave).
+- **Chamada da live 24h (out/2026):** o slide final (selo vermelho "AO VIVO 24h"), o fim da narração e a 1ª linha da descrição levam para a Rádio ao vivo (`LIVE_*` no topo do `content_generator.py`, aplicado por `_apply_live_cta` mesmo se o modelo esquecer). O **"Vídeo relacionado"** do Short NÃO existe na API — é definido à mão no Studio (Detalhes → Vídeo relacionado → a live).
 
 ## Testar sem publicar
 - Visual: `python test_preview.py` (gera `preview_slide.png` / `preview_titlecard.png`, gitignored; usa fontes do Windows).
