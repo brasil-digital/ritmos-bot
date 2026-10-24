@@ -22,6 +22,7 @@ from openai import OpenAI
 from longform_video import HANDLE, concat, make_cover, render_end_card, render_section
 
 LIVE_URL = f"https://www.youtube.com/{HANDLE}/live"  # mesmo link dos Shorts (content_generator.LIVE_URL)
+APP_LINE = "📱 Baixe o app Fala Brasil (iPhone e Android): https://www.falabrasil.digital/baixar/?src=youtube_ritmos"  # idem content_generator.APP_LINE
 
 VOICE = "nova"  # fixa no vídeo inteiro (nos Shorts ela é sorteada)
 SCENE_STYLE = (
@@ -78,6 +79,7 @@ def build_description(script: dict, durations: list[float]) -> str:
     ]
     if len(chapters) >= 3:
         parts.append("Capítulos:\n" + "\n".join(f"{_ts(s)} {h}" for s, h in chapters))
+    parts.append(APP_LINE)
     parts.append(" ".join(script.get("hashtags") or ["#MPB"]))
     return "\n\n".join(parts)
 

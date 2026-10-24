@@ -27,6 +27,8 @@ LIVE_CTA_SPOKEN = (
     "E pra ouvir música o dia inteiro, a Rádio Ritmos do Brasil e do Mundo "
     "está ao vivo, 24 horas, aqui no canal!"
 )
+# Link único de download do app Fala Brasil (iPhone → App Store, Android → Play).
+APP_LINE = "📱 Baixe o app Fala Brasil (iPhone e Android): https://www.falabrasil.digital/baixar/?src=youtube_ritmos"
 
 # ---------------------------------------------------------------------------
 # Regiões / cenas musicais. O Brasil tem peso maior (~1/3 das publicações);
@@ -211,4 +213,6 @@ def _apply_live_cta(content):
         content["youtube_description"] = (
             f"🔴 Rádio {CHANNEL_NAME} AO VIVO 24h: {LIVE_URL}\n\n{desc}"
         )
+    if "falabrasil.digital/baixar" not in content["youtube_description"]:
+        content["youtube_description"] = f"{content['youtube_description'].rstrip()}\n\n{APP_LINE}"
     return content
