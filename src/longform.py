@@ -44,7 +44,7 @@ def client():
 def scene_image(prompt: str, out_path: str) -> str:
     if os.path.exists(out_path):  # reaproveita se já gerou (refazer só o que mudou)
         return out_path
-    r = client().images.generate(model="gpt-image-1", size="1536x1024", quality="medium",
+    r = client().images.generate(model=os.environ.get("IMAGE_MODEL", "gpt-image-2"), size="1536x1024", quality="medium",
                                  prompt=SCENE_STYLE + prompt)
     with open(out_path, "wb") as f:
         f.write(base64.b64decode(r.data[0].b64_json))

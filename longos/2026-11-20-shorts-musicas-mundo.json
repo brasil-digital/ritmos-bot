@@ -1,0 +1,135 @@
+{
+ "narracao_dir": "C:/Users/Owner/Projetos/serie-dados-brasil/narracao/ritmos-shorts-mundo",
+ "imagens_dir": "C:/Users/Owner/ritmos-bot/longos/out/2026-11-20-musicas-que-conquistaram-o-mundo",
+ "trilhas": {
+  "brisa": "C:/Users/Owner/ritmos-bot/longos/out/especial-musicas-mundo/trilha/sep/htdemucs/113-brisa-brasileira/no_vocals.wav",
+  "suingue": "C:/Users/Owner/ritmos-bot/longos/out/especial-musicas-mundo/trilha/sep/htdemucs/26-nara-baiana-suingue-no-amor/no_vocals.wav",
+  "funk": "C:/Users/Owner/ritmos-bot/longos/out/especial-musicas-mundo/trilha/sep/htdemucs/100-vem-no-passinho/no_vocals.wav"
+ },
+ "shorts": [
+  {
+   "fala": "s1-lambada",
+   "tag": "LAMBADA • 1989",
+   "hook": "O maior hit brasileiro de 1989 era PLÁGIO",
+   "cover_image": "img_01_02.png",
+   "images": [
+    "img_01_02.png",
+    "img_01_01.png",
+    "img_01_04.png",
+    "img_01_05.png",
+    "img_01_06.png"
+   ],
+   "trilha": "suingue",
+   "title": "😳 Lambada: o hit brasileiro que era PLÁGIO de uma música boliviana",
+   "description": "🔴 Rádio Ritmos do Brasil e do Mundo AO VIVO 24h: https://www.youtube.com/@ritmos-do-mundo/live\n\n▶️ Vídeo completo (5 músicas brasileiras que conquistaram o mundo): https://youtu.be/Mj1QP54J9aQ\n\nA Lambada do Kaoma conquistou o mundo em 1989. Mas a melodia era de \"Llorando se fue\", do grupo boliviano Los Kjarkas, e eles ganharam na Justiça.\n\n📱 Baixe o app Fala Brasil (iPhone e Android): https://www.falabrasil.digital/baixar/?src=youtube_ritmos\n\n#Lambada #Kaoma #MúsicaBrasileira #Shorts",
+   "tags": [
+    "lambada",
+    "kaoma",
+    "los kjarkas",
+    "llorando se fue",
+    "plágio",
+    "música brasileira",
+    "anos 80"
+   ]
+  },
+  {
+   "fala": "s2-ipanema",
+   "tag": "GAROTA DE IPANEMA",
+   "hook": "A Garota de Ipanema EXISTIU de verdade",
+   "cover_image": "img_02_02.png",
+   "images": [
+    "img_02_02.png",
+    "img_02_00.png",
+    "img_02_01.png",
+    "img_02_04.png",
+    "img_02_05.png",
+    "img_02_06.png"
+   ],
+   "trilha": "brisa",
+   "title": "🌊 Garota de Ipanema: a moça da música EXISTIU de verdade",
+   "description": "🔴 Rádio Ritmos do Brasil e do Mundo AO VIVO 24h: https://www.youtube.com/@ritmos-do-mundo/live\n\n▶️ Vídeo completo (5 músicas brasileiras que conquistaram o mundo): https://youtu.be/Mj1QP54J9aQ\n\nTom Jobim e Vinicius de Moraes viam a Helô passar todo dia na frente do bar. Virou a música mais famosa da Bossa Nova.\n\n📱 Baixe o app Fala Brasil (iPhone e Android): https://www.falabrasil.digital/baixar/?src=youtube_ritmos\n\n#GarotaDeIpanema #BossaNova #TomJobim #Shorts",
+   "tags": [
+    "garota de ipanema",
+    "tom jobim",
+    "vinicius de moraes",
+    "helô pinheiro",
+    "bossa nova",
+    "música brasileira"
+   ]
+  },
+  {
+   "fala": "s3-mas-que-nada",
+   "tag": "MAS QUE NADA",
+   "hook": "Um samba de 1963 virou hit com os Black Eyed Peas",
+   "cover_image": "img_03_01.png",
+   "images": [
+    "img_03_01.png",
+    "img_03_00.png",
+    "img_03_02.png",
+    "img_03_03.png",
+    "img_03_04.png"
+   ],
+   "trilha": "brisa",
+   "title": "🎶 Mas que Nada: o samba de Jorge Ben que atravessou 40 ANOS até os Black Eyed Peas",
+   "description": "🔴 Rádio Ritmos do Brasil e do Mundo AO VIVO 24h: https://www.youtube.com/@ritmos-do-mundo/live\n\n▶️ Vídeo completo (5 músicas brasileiras que conquistaram o mundo): https://youtu.be/Mj1QP54J9aQ\n\nJorge Ben, 1963. Sérgio Mendes, 1966. Black Eyed Peas, 2006. A mesma música brasileira no topo do mundo.\n\n📱 Baixe o app Fala Brasil (iPhone e Android): https://www.falabrasil.digital/baixar/?src=youtube_ritmos\n\n#MasQueNada #JorgeBen #BlackEyedPeas #Shorts",
+   "tags": [
+    "mas que nada",
+    "jorge ben jor",
+    "sergio mendes",
+    "black eyed peas",
+    "samba",
+    "música brasileira"
+   ]
+  },
+  {
+   "fala": "s4-ai-se-eu-te-pego",
+   "tag": "AI SE EU TE PEGO",
+   "hook": "Um GOL levou esse forró pro mundo inteiro",
+   "cover_image": "img_04_03.png",
+   "images": [
+    "img_04_03.png",
+    "img_04_00.png",
+    "img_04_02.png",
+    "img_04_01.png",
+    "img_04_05.png",
+    "img_04_06.png"
+   ],
+   "trilha": "suingue",
+   "title": "⚽ Ai Se Eu Te Pego: a COMEMORAÇÃO de gol que levou o forró pro mundo",
+   "description": "🔴 Rádio Ritmos do Brasil e do Mundo AO VIVO 24h: https://www.youtube.com/@ritmos-do-mundo/live\n\n▶️ Vídeo completo (5 músicas brasileiras que conquistaram o mundo): https://youtu.be/Mj1QP54J9aQ\n\nCristiano Ronaldo e Marcelo dançaram depois de um gol contra o Málaga em 2011, e a música do Michel Teló chegou ao 1º lugar em mais de 15 países.\n\n📱 Baixe o app Fala Brasil (iPhone e Android): https://www.falabrasil.digital/baixar/?src=youtube_ritmos\n\n#AiSeEuTePego #MichelTeló #CristianoRonaldo #Shorts",
+   "tags": [
+    "ai se eu te pego",
+    "michel teló",
+    "cristiano ronaldo",
+    "marcelo",
+    "forró",
+    "música brasileira"
+   ]
+  },
+  {
+   "fala": "s5-funk-phonk",
+   "tag": "FUNK • AGORA",
+   "hook": "Gringos estão levando o FUNK brasileiro?",
+   "cover_image": "img_05_01.png",
+   "images": [
+    "img_05_01.png",
+    "img_05_00.png",
+    "img_05_03.png",
+    "img_05_04.png",
+    "img_05_05.png",
+    "img_05_06.png"
+   ],
+   "trilha": "funk",
+   "title": "🔥 Brazilian Phonk: gringos estão LEVANDO o funk brasileiro?",
+   "description": "🔴 Rádio Ritmos do Brasil e do Mundo AO VIVO 24h: https://www.youtube.com/@ritmos-do-mundo/live\n\n▶️ Vídeo completo (5 músicas brasileiras que conquistaram o mundo): https://youtu.be/Mj1QP54J9aQ\n\nO funk foi o gênero que mais cresceu no Spotify em 2025. Mas muitos hits do \"Brazilian phonk\" são feitos por produtores de fora. Reconhecimento ou apropriação? Comenta aí!\n\n📱 Baixe o app Fala Brasil (iPhone e Android): https://www.falabrasil.digital/baixar/?src=youtube_ritmos\n\n#FunkBrasileiro #BrazilianPhonk #Funk #Shorts",
+   "tags": [
+    "funk brasileiro",
+    "brazilian phonk",
+    "montagem",
+    "phonk",
+    "funk",
+    "música brasileira"
+   ]
+  }
+ ]
+}
