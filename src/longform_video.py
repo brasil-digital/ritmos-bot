@@ -164,7 +164,7 @@ def _title_png(text, sub, path):
     img.save(path)
 
 
-def _end_card_png(path):
+def _end_card_png(path, thanks="OBRIGADA POR ASSISTIR"):
     img = Image.new("RGB", (W, H), DARK)
     d = ImageDraw.Draw(img)
     for y in range(H):
@@ -175,7 +175,7 @@ def _end_card_png(path):
     d.rectangle([(0, H - 18), (W, H - 10)], fill=YELLOW)
     d.rectangle([(0, H - 10), (W, H)], fill=GREEN)
     _paste_logo(img, 230, ((W - 230) // 2, 90))
-    d.text((W / 2, 400), "OBRIGADA POR ASSISTIR", font=_mont(66, b"Black"), fill=WHITE, anchor="mm")
+    d.text((W / 2, 400), thanks, font=_mont(66, b"Black"), fill=WHITE, anchor="mm")
     d.text((W / 2, 480), f"Inscreva-se no Ritmos do Brasil e do Mundo  •  {HANDLE}", font=_mont(40, b"Bold"),
            fill=YELLOW, anchor="mm")
     # selo AO VIVO (mesmo do slide final dos Shorts)
@@ -242,9 +242,9 @@ def render_section(idx, section, img_path, audio_path, out_path, tmp, category_l
     return dur
 
 
-def render_end_card(out_path, tmp, seconds=8):
+def render_end_card(out_path, tmp, seconds=8, thanks="OBRIGADA POR ASSISTIR"):
     png = os.path.join(tmp, "endcard.png")
-    _end_card_png(png)
+    _end_card_png(png, thanks)
     _run(["ffmpeg", "-y", "-loop", "1", "-i", png, "-f", "lavfi", "-i", "anullsrc=r=44100:cl=stereo",
           "-t", str(seconds), "-vf", f"scale={W}:{H}"] + ENC + [out_path])
 

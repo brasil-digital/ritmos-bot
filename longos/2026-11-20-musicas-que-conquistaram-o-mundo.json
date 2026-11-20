@@ -1,0 +1,196 @@
+{
+ "category_label": "ESPECIAL",
+ "narracao_dir": "C:/Users/Owner/Projetos/serie-dados-brasil/narracao/ritmos-musicas-mundo",
+ "youtube_title": "5 Músicas Brasileiras que CONQUISTARAM O MUNDO (e as POLÊMICAS que ninguém conta)",
+ "thumb_text": "CONQUISTARAM O MUNDO",
+ "thumb_sub": "E AS POLÊMICAS QUE NINGUÉM CONTA",
+ "badge": "5 MÚSICAS BRASILEIRAS",
+ "thumb_image_prompt": "A glowing vinyl record in green and yellow light floating in front of a dramatic night-time globe of planet Earth with glowing lines spreading from Brazil to every continent, confetti and stage smoke, epic cinematic, no people",
+ "youtube_description": "A Lambada que era plágio de uma música boliviana. A garota de verdade que inspirou Garota de Ipanema. O samba de Jorge Ben que atravessou 40 anos até os Black Eyed Peas. O gol do Cristiano Ronaldo que levou Ai Se Eu Te Pego pro mundo. E o funk brasileiro que hoje é produzido por gringos: o Brazilian phonk.\n\n5 músicas brasileiras que conquistaram o mundo, e as histórias que quase ninguém conta. Qual vai ser a próxima? Comenta aí!",
+ "tags": [
+  "músicas brasileiras",
+  "música brasileira no mundo",
+  "lambada",
+  "kaoma",
+  "los kjarkas",
+  "llorando se fue",
+  "garota de ipanema",
+  "tom jobim",
+  "vinicius de moraes",
+  "mas que nada",
+  "jorge ben jor",
+  "sergio mendes",
+  "black eyed peas",
+  "ai se eu te pego",
+  "michel teló",
+  "cristiano ronaldo",
+  "funk brasileiro",
+  "brazilian phonk",
+  "montagem",
+  "história da música",
+  "curiosidades musicais",
+  "polêmica"
+ ],
+ "hashtags": [
+  "#MúsicaBrasileira",
+  "#Lambada",
+  "#GarotaDeIpanema",
+  "#BrazilianPhonk",
+  "#FunkBrasileiro"
+ ],
+ "trilhas": {
+  "brisa": "C:/Users/Owner/ritmos-bot/longos/out/especial-musicas-mundo/trilha/sep/htdemucs/113-brisa-brasileira/no_vocals.wav",
+  "suingue": "C:/Users/Owner/ritmos-bot/longos/out/especial-musicas-mundo/trilha/sep/htdemucs/26-nara-baiana-suingue-no-amor/no_vocals.wav",
+  "funk": "C:/Users/Owner/ritmos-bot/longos/out/especial-musicas-mundo/trilha/sep/htdemucs/100-vem-no-passinho/no_vocals.wav"
+ },
+ "sections": [
+  {
+   "fala": "00-abertura",
+   "heading": "5 músicas que conquistaram o mundo",
+   "trilha": "brisa",
+   "card": {
+    "tipo": "titulo",
+    "linha1": "5 MÚSICAS BRASILEIRAS QUE CONQUISTARAM O MUNDO",
+    "linha2": "E AS POLÊMICAS QUE NINGUÉM CONTA"
+   },
+   "images": [
+    "A spinning vinyl record on a vintage turntable, extreme close-up, warm golden light, dust particles, shallow depth of field",
+    "A packed football stadium at night with fireworks and flags waving, seen from the back of the crowd, fans only as silhouettes",
+    "An old world map spread on a wooden table with stacked vinyl records, a green and yellow ribbon crossing the Atlantic, warm lamp light",
+    "Planet Earth from space at night with glowing golden lines of light spreading from Brazil to Europe, North America, Africa and Asia",
+    "A crowded tropical beach party at sunset, people dancing seen only as silhouettes against an orange sky, palm trees"
+   ]
+  },
+  {
+   "fala": "01-lambada",
+   "heading": "Lambada: o plágio que virou febre",
+   "trilha": "suingue",
+   "card": {
+    "tipo": "historia",
+    "num": "1",
+    "nome": "LAMBADA",
+    "info": "1989  •  BOLÍVIA → FRANÇA → O MUNDO"
+   },
+   "images": [
+    "A 1989 European seaside disco at night, colorful neon lights and a mirror ball, couples dancing very close seen only as silhouettes",
+    "A paradise beach in Bahia, Brazil at golden hour, small silhouettes of children dancing on the sand, coconut palms, 1980s film look",
+    "A woman's flowing colorful skirt spinning in motion blur on a dance floor, only the skirt and legs visible, warm light",
+    "Stacks of 1980s cassette tapes and a vintage boombox radio on a shelf, nostalgic warm colors",
+    "The Bolivian Andes at dawn, snowy peaks, a traditional wooden quena flute and a charango resting on an old stone wall in the foreground",
+    "A small rustic 1980s recording room in La Paz with an acoustic guitar, an Andean flute and an old reel-to-reel tape recorder",
+    "An empty wood-paneled European courtroom with a judge's gavel on the bench, dramatic shafts of light",
+    "Sheet music with handwritten notes lying on a sunlit table beside Andean woven textile, nostalgic"
+   ]
+  },
+  {
+   "fala": "02-ipanema",
+   "heading": "Garota de Ipanema: a moça era real",
+   "trilha": "brisa",
+   "card": {
+    "tipo": "historia",
+    "num": "2",
+    "nome": "GAROTA DE IPANEMA",
+    "info": "1962  •  RIO DE JANEIRO → O MUNDO"
+   },
+   "images": [
+    "Ipanema beach in Rio de Janeiro in the early 1960s, vintage Kodachrome film look, the Two Brothers mountain at the end of the beach, calm sea",
+    "A small 1960s corner bar in Rio with wooden tables, two glasses of cold beer and a notebook with handwritten music notes, afternoon light",
+    "A young woman in a 1960s summer dress walking away along the famous black-and-white wave-pattern sidewalk of Rio, seen from behind, golden light",
+    "An upright piano in a 1960s apartment with an open window looking to the sea, music sheets scattered, warm afternoon",
+    "A 1964 New York recording studio with a tenor saxophone on a stand, a classical guitar and vintage microphones, no people",
+    "A golden vintage gramophone statuette award on a dark velvet shelf under a spotlight",
+    "Ipanema at dusk today, city lights turning on along the beach, the Two Brothers mountain silhouetted against a pink sky"
+   ]
+  },
+  {
+   "fala": "03-mas-que-nada",
+   "heading": "Mas que Nada: 40 anos de samba",
+   "trilha": "brisa",
+   "card": {
+    "tipo": "historia",
+    "num": "3",
+    "nome": "MAS QUE NADA",
+    "info": "1963  •  1966  •  2006"
+   },
+   "images": [
+    "A narrow street in Rio de Janeiro in 1963 at night, a samba circle with a guitar, pandeiro and cavaquinho, musicians only as silhouettes",
+    "A vintage acoustic guitar and a pandeiro tambourine resting on an old wooden chair against a colorful colonial wall",
+    "A 1960s vinyl record pressing plant, stacks of fresh black records, warm industrial light",
+    "A 1960s American TV studio stage with a grand piano under spotlights and an empty band stand, retro colors",
+    "A 2006 hip hop nightclub with purple and gold lights, crowd silhouettes with hands in the air, smoke",
+    "A row of vinyl records and CDs on a shelf going from the 1960s to the 2000s, showing the passage of time, warm light"
+   ]
+  },
+  {
+   "fala": "04-ai-se-eu-te-pego",
+   "heading": "Ai Se Eu Te Pego: a dança do gol",
+   "trilha": "suingue",
+   "card": {
+    "tipo": "historia",
+    "num": "4",
+    "nome": "AI SE EU TE PEGO",
+    "info": "2011  •  DO FORRÓ AOS ESTÁDIOS DA EUROPA"
+   },
+   "images": [
+    "A countryside forró party in Northeast Brazil at night under string lights, couples dancing close as silhouettes, an accordion player on a small stage seen from behind",
+    "A red accordion close-up on a wooden stage with warm stage lights",
+    "A huge European football stadium at night seen from high in the stands, packed crowd, the pitch glowing under floodlights, players tiny and unrecognizable",
+    "A football resting in the back of a goal net under stadium floodlights, confetti in the air",
+    "A smartphone glowing in a dark room with a blurred video on screen, bokeh lights, no text",
+    "A packed European nightclub dance floor with everyone jumping, colorful lights, crowd silhouettes only",
+    "A wedding party dance floor in Europe with string lights and guests dancing as silhouettes, joyful"
+   ]
+  },
+  {
+   "fala": "05-funk-phonk",
+   "heading": "Funk: o mundo dança, quem fica com a fama?",
+   "trilha": "funk",
+   "card": {
+    "tipo": "historia",
+    "num": "5",
+    "nome": "O FUNK BRASILEIRO",
+    "info": "DA FAVELA PARA O MUNDO  •  AGORA"
+   },
+   "images": [
+    "A Rio de Janeiro hillside favela at night with thousands of warm lights, cinematic wide shot",
+    "A giant wall of sound-system speakers at a baile funk street party at night, colorful lights, crowd silhouettes",
+    "A 1980s Miami street at night with a retro car and a big boombox, neon pink and blue lights",
+    "DJ turntables and a mixer under neon lights, hands of a DJ only, smoke",
+    "A home music studio in a small apartment with a laptop, a MIDI keyboard and purple neon light, snow falling outside the window",
+    "A gym at night with neon lights, dumbbells and a smartphone on a tripod recording, nobody visible",
+    "The interior of a car at night with a glowing neon dashboard and a big subwoofer in the trunk",
+    "A glowing world map made of sound waves and equalizer bars, green and yellow light pulsing from Brazil"
+   ]
+  },
+  {
+   "fala": "055-mencoes",
+   "heading": "Menções honrosas",
+   "trilha": "brisa",
+   "card": {
+    "tipo": "historia",
+    "num": "BÔNUS",
+    "nome": "MENÇÕES HONROSAS",
+    "info": "1942  •  2022"
+   },
+   "images": [
+    "A glamorous 1940s Hollywood movie theater exterior at night with glowing marquee lights and no readable text, vintage color",
+    "A vintage 1940s film projector beam cutting through a dark cinema over audience silhouettes, colorful light on the screen",
+    "Copacabana beach in Rio in the 1940s, vintage hand-tinted postcard look, art deco buildings, calm sea",
+    "A smartphone on a dark table showing a glowing abstract rising chart graph in purple and green, neon reflections, no text",
+    "A huge pop concert in a stadium bathed in pink and green lights, confetti, crowd silhouettes with phones up"
+   ]
+  },
+  {
+   "fala": "06-final",
+   "heading": "Qual vai ser a próxima?",
+   "trilha": "brisa",
+   "card": null,
+   "images": [
+    "Rio de Janeiro at sunset seen from above, Sugarloaf mountain and Guanabara Bay glowing orange, cinematic",
+    "A wall of colorful vinyl record covers in a small music shop, warm light, no readable text",
+    "A vintage studio microphone in front of a glowing red on-air lamp in a dark radio studio, no text",
+    "Planet Earth at night from space with glowing golden lines spreading from Brazil to every continent"
+   ]
+  }
+ ]
+}
