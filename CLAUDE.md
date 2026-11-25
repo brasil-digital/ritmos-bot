@@ -19,12 +19,13 @@ GitHub Actions, branch **`main`**.
 - **Brasil ~80% do sorteio** (`REGION_WEIGHTS`, brasil = 44). Os Shorts de artistas brasileiros com conflito/virada no título têm ~1 mil views; os "do Mundo", dezenas.
 - Ângulos `resistencia` e `virada` com peso maior (`ANGLE_WEIGHTS`); fórmula de título: `[emoji] Artista: frase com PALAVRA forte | Gênero`.
 - Narração sempre em PT-BR. `CHANNEL_HANDLE`/`CHANNEL_NAME` no topo do `content_generator.py`; `BRAND_NAME` no `video_creator.py`.
+- **Shorts gospel (desde 27/nov/2026, teste de 4 semanas):** dom 6h e ter/qua/sex 18h de Brasília (`GOSPEL_SLOTS`), só ângulos positivos, sem política/escândalo; usam `GOSPEL_MODEL` (modelo mais forte, o Haiku errou fatos). Avaliar ~24/dez: views vs média e inscritos.
 - Anti-repetição: o prompt recebe os últimos 15 títulos do canal (RSS público, sem chave).
 - **Chamada da live 24h (out/2026):** o slide final (selo vermelho "AO VIVO 24h"), o fim da narração e a 1ª linha da descrição levam para a Rádio ao vivo (`LIVE_*` no topo do `content_generator.py`, aplicado por `_apply_live_cta` mesmo se o modelo esquecer). O **"Vídeo relacionado"** do Short NÃO existe na API — é definido à mão no Studio (Detalhes → Vídeo relacionado → a live).
 
 ## Testar sem publicar
 - Visual: `python test_preview.py` (gera `preview_slide.png` / `preview_titlecard.png`, gitignored; usa fontes do Windows).
-- Não há modo "sem upload" no `main.py` — não rode o pipeline completo só para testar.
+- Vídeo completo SEM publicar: `gh workflow run upload.yml -f teste=true` (+ `-f gospel=true` para forçar gospel) → baixar com `gh run download <id> -n short-teste`.
 
 ## Armadilhas conhecidas
 - O token do YouTube tem que ser do canal Ritmos (já aconteceu de gerar para o Brasil Digital por engano): depois de trocar o token, conferir com `python check_channels.py`.
