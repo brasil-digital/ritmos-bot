@@ -253,7 +253,7 @@ Responda APENAS com JSON válido, sem markdown:
         }]
     )
 
-    text = response.content[0].text.strip()
+    text = next(b.text for b in response.content if b.type == "text").strip()
     if text.startswith("```"):
         text = text.split("```")[1]
         if text.startswith("json"):
