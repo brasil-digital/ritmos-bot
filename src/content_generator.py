@@ -204,7 +204,7 @@ Escolha um assunto específico DIFERENTE de todos os listados acima.
 
     response = client.messages.create(
         model=GOSPEL_MODEL if gospel else "claude-haiku-4-5-20251001",
-        max_tokens=2000,
+        max_tokens=8000 if gospel else 2000,
         messages=[{
             "role": "user",
             "content": f"""Você é um jornalista musical apaixonado por ritmos do mundo inteiro, criando conteúdo viral para YouTube Shorts do canal "{CHANNEL_NAME}".
