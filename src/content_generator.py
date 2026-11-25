@@ -123,7 +123,12 @@ REGRAS EXTRAS PARA ESTE VÍDEO (gospel):
 - Não transcreva letras: no máximo cite o nome do louvor e um trecho de até 5 palavras.
 - Título: mesma fórmula do canal, mas a palavra forte é POSITIVA (TRANSFORMOU, EMOCIONOU, ATRAVESSOU, NASCEU, MILHÕES, ORAÇÃO, ESPERANÇA). Gênero no fim = "Gospel" ou "Louvor". Emoji: 🙏, 🎶, ✝️ ou 🕊️.
 - Tags devem incluir: "gospel", "louvor", "música gospel", "música cristã".
+- PRECISÃO: só escreva números e datas de que tem CERTEZA (ex.: Harpa Cristã = 1ª edição em 1922, edição atual com 640 hinos). Na dúvida, não cite número nem ano. Nada de afirmações genéricas sem base ("presídios, favelas...").
+- "subject": curto, até 30 caracteres (ex.: "Harpa Cristã", "Aline Barros").
+- Português do Brasil correto (igreja, nunca "iglesia"); revise a ortografia antes de responder.
 """
+# Modelo mais forte só nos Shorts gospel (4/semana): o público confere os fatos.
+GOSPEL_MODEL = "claude-sonnet-5-5"
 
 
 def _now_brasilia():
@@ -198,7 +203,7 @@ Escolha um assunto específico DIFERENTE de todos os listados acima.
 """
 
     response = client.messages.create(
-        model="claude-haiku-4-5-20251001",
+        model=GOSPEL_MODEL if gospel else "claude-haiku-4-5-20251001",
         max_tokens=2000,
         messages=[{
             "role": "user",
