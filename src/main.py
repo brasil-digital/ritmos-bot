@@ -28,6 +28,16 @@ def main():
         radio_logo = RADIO_LOGO_PATH if os.path.exists(RADIO_LOGO_PATH) else None
         video_path = create_video(content, "/tmp/ritmos_video.mp4", logo_path=logo, audio_path=audio_path, radio_logo_path=radio_logo)
 
+        if os.environ.get("SKIP_UPLOAD") == "1":
+            # Modo teste: não publica; guarda vídeo + roteiro para aprovação.
+            import json, shutil
+            os.makedirs("teste", exist_ok=True)
+            shutil.copy(video_path, "teste/short_teste.mp4")
+            with open("teste/conteudo.json", "w", encoding="utf-8") as f:
+                json.dump(content, f, ensure_ascii=False, indent=2)
+            print("\n🧪 SKIP_UPLOAD=1 — NÃO publicado. Saída em teste/")
+            return
+
         print("\n📤 Publicando no YouTube...")
         result = upload_video(video_path, content)
 

@@ -54,6 +54,7 @@ GRADIENTS = {
     "letra":          ((5, 10, 30), (10, 20, 55)),
     "recorde":        ((25, 20, 5), (50, 40, 10)),
     "influencia":     ((8, 22, 24), (14, 40, 44)),
+    "gospel":         ((18, 8, 34), (52, 34, 8)),   # roxo profundo → dourado
     # chaves antigas (compatibilidade)
     "artista_lenda":  ((5, 15, 30), (10, 30, 50)),
     "artista_atual":  ((5, 25, 15), (10, 45, 25)),
@@ -75,6 +76,7 @@ TYPE_LABELS = {
     "influencia": "CONEXÕES",
     "resistencia": "RESISTÊNCIA",
     "virada": "A VIRADA",
+    "gospel": "LOUVOR & FÉ",
     # chaves antigas (compatibilidade)
     "artista_lenda": "LENDA DA MÚSICA",
     "artista_atual": "EM ALTA",

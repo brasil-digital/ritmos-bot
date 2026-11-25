@@ -5,6 +5,15 @@ on:
     - cron: '0 9 * * *'   # 06h BRT (9h UTC)
     - cron: '0 21 * * *'  # 18h BRT (21h UTC)
   workflow_dispatch:
+    inputs:
+      teste:
+        description: 'Só gerar o vídeo (NÃO publicar) e anexar ao run'
+        type: boolean
+        default: false
+      gospel:
+        description: 'Forçar Short gospel'
+        type: boolean
+        default: false
 
 jobs:
   upload:
@@ -38,3 +47,13 @@ jobs:
           YOUTUBE_CLIENT_ID:     ${{ secrets.YOUTUBE_CLIENT_ID }}
           YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
           YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
+          SKIP_UPLOAD:           ${{ inputs.teste && '1' || '' }}
+          FORCE_GOSPEL:          ${{ inputs.gospel && '1' || '' }}
+
+      - name: Anexar vídeo de teste
+        if: ${{ inputs.teste }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: short-teste
+          path: teste/
+          retention-days: 3

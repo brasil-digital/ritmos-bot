@@ -4,6 +4,8 @@ import os
 import random
 import re
 import urllib.request
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
 
@@ -87,6 +89,55 @@ ANGLE_WEIGHTS = {
 }
 DEFAULT_ANGLE_WEIGHT = 1
 
+# ---------------------------------------------------------------------------
+# Shorts gospel (teste a partir de nov/2026, pedido do Ronny): 4 por semana em
+# horários fixos, para comparar as views com o resto do canal. Fora desses
+# horários o sorteio acima segue igual. FORCE_GOSPEL=1 força (teste manual).
+# ---------------------------------------------------------------------------
+GOSPEL_REGION = (
+    "gospel",
+    "a música gospel e cristã do Brasil (louvor e adoração, Harpa Cristã, hinos tradicionais, "
+    "corinhos, grandes cantores e ministérios de louvor brasileiros, a história do gospel no país)",
+)
+# (dia da semana, período) no horário de Brasília. 0 = segunda ... 6 = domingo.
+GOSPEL_SLOTS = {
+    (6, "manha"),  # domingo 6h
+    (1, "noite"),  # terça 18h
+    (2, "noite"),  # quarta 18h (dia de culto)
+    (4, "noite"),  # sexta 18h
+}
+# No gospel, nada de conflito/rivalidade: o público é de fé e o tom é de edificação.
+GOSPEL_ANGLES = [
+    ("historia", "A história emocionante por trás de um louvor, hino ou cantor gospel"),
+    ("lenda", "Homenagem a um grande nome da música cristã brasileira"),
+    ("letra", "O significado e a base bíblica de um louvor ou hino conhecido"),
+    ("curiosidade", "Uma curiosidade bonita e pouco conhecida sobre a música gospel no Brasil"),
+    ("virada", "Uma virada de vida real de um cantor gospel (conversão, superação, chamado)"),
+    ("genero", "A origem de um estilo da música cristã (Harpa Cristã, corinhos, louvor congregacional, black gospel)"),
+]
+GOSPEL_RULES = """
+REGRAS EXTRAS PARA ESTE VÍDEO (gospel):
+- Tom de respeito e edificação. Proibido: política, polêmicas, escândalos, brigas entre igrejas/denominações, prosperidade financeira, críticas a qualquer fé.
+- Nada de assunto sobre a vida pessoal/judicial de cantores vivos (separações, processos, dinheiro).
+- Fatos verificáveis apenas (datas, autoria de hinos, trajetória pública). Se não tiver certeza, escolha outro assunto.
+- Não transcreva letras: no máximo cite o nome do louvor e um trecho de até 5 palavras.
+- Título: mesma fórmula do canal, mas a palavra forte é POSITIVA (TRANSFORMOU, EMOCIONOU, ATRAVESSOU, NASCEU, MILHÕES, ORAÇÃO, ESPERANÇA). Gênero no fim = "Gospel" ou "Louvor". Emoji: 🙏, 🎶, ✝️ ou 🕊️.
+- Tags devem incluir: "gospel", "louvor", "música gospel", "música cristã".
+"""
+
+
+def _now_brasilia():
+    return datetime.now(ZoneInfo("America/Sao_Paulo"))
+
+
+def is_gospel_slot(now=None):
+    if os.environ.get("FORCE_GOSPEL") == "1":
+        return True
+    now = now or _now_brasilia()
+    period = "manha" if now.hour < 12 else "noite"
+    return (now.weekday(), period) in GOSPEL_SLOTS
+
+
 HOOKS = [
     "Você sabia que...",
     "A história que poucos conhecem:",
@@ -124,8 +175,15 @@ def _pick_angle():
 
 
 def generate_content():
-    region_key, region_desc = _pick_region()
-    angle_key, angle_desc = _pick_angle()
+    gospel = is_gospel_slot()
+    if gospel:
+        region_key, region_desc = GOSPEL_REGION
+        angle_key, angle_desc = random.choice(GOSPEL_ANGLES)
+        extra_rules = GOSPEL_RULES
+    else:
+        region_key, region_desc = _pick_region()
+        angle_key, angle_desc = _pick_angle()
+        extra_rules = ""
     hook = random.choice(HOOKS)
 
     recent = _recent_video_titles()
@@ -150,6 +208,7 @@ Região/cena musical deste vídeo: {region_desc}
 Ângulo do conteúdo: {angle_desc}
 Hook inicial: "{hook}"
 {avoid_block}
+{extra_rules}
 
 Crie um roteiro para um Short do YouTube sobre música/ritmos, dentro da região e do ângulo indicados acima. O vídeo terá 5 slides de texto de ~9 segundos cada (total ~45 segundos).
 
@@ -194,7 +253,13 @@ Responda APENAS com JSON válido, sem markdown:
         text = text.split("```")[1]
         if text.startswith("json"):
             text = text[4:]
-    return _apply_live_cta(json.loads(text.strip()))
+    content = json.loads(text.strip())
+    if gospel:
+        # capa/cores próprias ("LOUVOR & FÉ"); o ângulo sorteado fica guardado
+        content["angle"] = content.get("type", angle_key)
+        content["type"] = "gospel"
+        content["region"] = "gospel"
+    return _apply_live_cta(content)
 
 
 def _apply_live_cta(content):
